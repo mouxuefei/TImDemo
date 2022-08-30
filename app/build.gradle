@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.edocyun.timchat"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -46,14 +46,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}"
 
-    implementation  'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖
-    implementation  'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
     implementation 'com.orhanobut:logger:2.2.0'
-    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     api 'com.tencent.imsdk:imsdk-plus:6.5.2816'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    implementation "io.github.lucksiege:pictureselector:v2.7.3-rc08"
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-
+    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.8'
+    implementation 'com.github.getActivity:XXPermissions:16.0'
 }

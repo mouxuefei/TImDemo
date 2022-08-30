@@ -23,7 +23,7 @@ import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*
 import com.edocyun.timchat.vp.contract.IChatContact
 import com.edocyun.timchat.vp.presenter.ChatPresenter
-import com.edocyun.timchat.widget.MediaManager
+import com.edocyun.timchat.util.MediaManager
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -55,7 +55,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             PictureFileUtil.openGalleryPic(this@ChatActivity, REQUEST_CODE_IMAGE)
         }
         rlVideo.setOnClickListener {
-            PictureFileUtil.openGalleryAudio(this@ChatActivity, REQUEST_CODE_VEDIO)
+            PictureFileUtil.openGalleryVideo(this@ChatActivity, REQUEST_CODE_VEDIO)
         }
         rlFile.setOnClickListener {
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)

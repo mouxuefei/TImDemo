@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  *describe: 表情数据库操作
- *author: Went_Gone
- *create on: 2016/10/27
  */
 public class EmojiDao {
     private static final String TAG = "EmojiDao";

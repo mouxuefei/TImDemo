@@ -1,4 +1,4 @@
-package com.edocyun.timchat.widget;
+package com.edocyun.timchat.util;
 
 
 import android.content.Context;

@@ -13,8 +13,6 @@ import java.io.IOException;
  */
 public class BitmapUtil {
 
-
-
      public static ImageSize getImageSize(Bitmap bitmap) {
         ImageSize imageSize = new ImageSize();
         if (null == bitmap || bitmap.isRecycled()) {

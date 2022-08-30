@@ -19,9 +19,6 @@ import androidx.annotation.Nullable;
 public class GlideUtils {
 
  	public static void loadChatImage(final Context mContext, String imgUrl,final ImageView imageView) {
-
-
-
 	final RequestOptions options = new RequestOptions()
 				.placeholder(R.mipmap.default_img_failed)// 正在加载中的图片
 				.error(R.mipmap.default_img_failed); // 加载失败的图片
