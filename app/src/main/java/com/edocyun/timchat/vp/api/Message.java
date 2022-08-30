@@ -1,16 +1,17 @@
 package com.edocyun.timchat.vp.api;
 
 
-public  class Message {
+public class Message {
 
-     private String uuid;
-      private String msgId;
-     private MsgType msgType;
-     private MsgBody body;
-     private MsgSendStatus sentStatus;
-     private String senderId;
-     private String targetId;
-     private long sentTime;
+    private String uuid;
+    private String msgId;
+    private MsgType msgType;
+    private MsgBody body;
+    private MsgSendStatus sentStatus;
+
+    private long sentTime;
+
+    private String userId;
 
 
     public String getUuid() {
@@ -45,21 +46,6 @@ public  class Message {
         this.body = body;
     }
 
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getTargetId() {
-        return targetId;
-    }
-
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
 
     public MsgSendStatus getSentStatus() {
         return sentStatus;
@@ -70,12 +56,19 @@ public  class Message {
     }
 
 
-
     public long getSentTime() {
         return sentTime;
     }
 
     public void setSentTime(long sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

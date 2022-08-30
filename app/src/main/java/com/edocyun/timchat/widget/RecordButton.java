@@ -21,16 +21,14 @@ import android.widget.TextView;
 
 import com.edocyun.timchat.R;
 import com.edocyun.timchat.util.LogUtil;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import java.io.File;
 
 import androidx.appcompat.widget.AppCompatButton;
 
 public class RecordButton extends AppCompatButton {
-
-
-
-
     public RecordButton(Context context) {
         super(context);
         init();
@@ -46,7 +44,7 @@ public class RecordButton extends AppCompatButton {
         init();
     }
 
-    private String mFile =  getContext().getFilesDir()+ "/"+"voice_"+System.currentTimeMillis()+".mp3";
+    private String mFile = getContext().getFilesDir() + "/" + "voice_" + System.currentTimeMillis() + ".mp3";
 
 
     private OnFinishedRecordListener finishedListener;
@@ -59,10 +57,7 @@ public class RecordButton extends AppCompatButton {
      **/
     private int MAX_INTERVAL_TIME = 1000 * 60;
 
-
-
-
-    private static  View view;
+    private View view;
 
     private TextView mStateTV;
 
@@ -72,11 +67,7 @@ public class RecordButton extends AppCompatButton {
     private ObtainDecibelThread mThread;
     private Handler volumeHandler;
 
-
-    private float y ;
-
-
-
+    private float y;
 
 
     public void setOnFinishedRecordListener(OnFinishedRecordListener listener) {
@@ -86,21 +77,20 @@ public class RecordButton extends AppCompatButton {
 
     private static long startTime;
     private Dialog recordDialog;
-    private static int[] res = { R.drawable.ic_volume_0, R.drawable.ic_volume_1, R.drawable.ic_volume_2,
-            R.drawable.ic_volume_3, R.drawable.ic_volume_4 , R.drawable.ic_volume_5 , R.drawable.ic_volume_6
-            , R.drawable.ic_volume_7 , R.drawable.ic_volume_8 };
-
+    private static int[] res = {R.drawable.ic_volume_0, R.drawable.ic_volume_1, R.drawable.ic_volume_2,
+            R.drawable.ic_volume_3, R.drawable.ic_volume_4, R.drawable.ic_volume_5, R.drawable.ic_volume_6
+            , R.drawable.ic_volume_7, R.drawable.ic_volume_8};
 
 
     @SuppressLint("HandlerLeak")
     private void init() {
-        volumeHandler = new Handler(){
+        volumeHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == -100){
+                if (msg.what == -100) {
                     stopRecording();
                     recordDialog.dismiss();
-                }else if(msg.what != -1){
+                } else if (msg.what != -1) {
                     mStateIV.setImageResource(res[msg.what]);
                 }
             }
@@ -108,15 +98,29 @@ public class RecordButton extends AppCompatButton {
     }
 
     private AnimationDrawable anim;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        XXPermissions.with(getContext())
+                .permission(Permission.RECORD_AUDIO)
+                .permission(Permission.READ_EXTERNAL_STORAGE)
+                .request((permissions, all) -> {
+                    if (!all) {
+                        return;
+                    }
+                    onTouchButton(event);
+                });
+        return true;
+    }
+
+    private void onTouchButton(MotionEvent event) {
         int action = event.getAction();
         y = event.getY();
-        if(mStateTV!=null && mStateIV!=null &&y<0){
+        if (mStateTV != null && mStateIV != null && y < 0) {
             mStateTV.setText("松开手指,取消发送");
             mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_volume_cancel));
-        }else if(mStateTV != null){
+        } else if (mStateTV != null) {
             mStateTV.setText("手指上滑,取消发送");
         }
         switch (action) {
@@ -127,37 +131,35 @@ public class RecordButton extends AppCompatButton {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 this.setText("按住录音");
-                 if(y>=0 && (System.currentTimeMillis() - startTime <= MAX_INTERVAL_TIME)){
+                if (y >= 0 && (System.currentTimeMillis() - startTime <= MAX_INTERVAL_TIME)) {
                     LogUtil.d("结束录音:");
                     finishRecord();
 
-                }else if(y<0){  //当手指向上滑，会cancel
+                } else if (y < 0) {  //当手指向上滑，会cancel
                     cancelRecord();
                 }
                 break;
         }
-
-        return true;
     }
 
     /**
      * 初始化录音对话框 并 开始录音
      */
     private void initDialogAndStartRecord() {
-         startTime = System.currentTimeMillis();
-         recordDialog = new Dialog(getContext(), R.style.like_toast_dialog_style);
-       // view = new ImageView(getContext());
-         view = View.inflate(getContext(), R.layout.dialog_record, null);
-         mStateIV = (ImageView) view.findViewById(R.id.rc_audio_state_image);
-         mStateTV = (TextView) view.findViewById(R.id.rc_audio_state_text);
-         mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.anim_mic));
-         anim = (AnimationDrawable) mStateIV.getDrawable();
-         anim.start();
-         mStateIV.setVisibility(View.VISIBLE);
-         //mStateIV.setImageResource(R.drawable.ic_volume_1);
-         mStateTV.setVisibility(View.VISIBLE);
-         mStateTV.setText("手指上滑,取消发送");
-         recordDialog.setContentView(view, new LinearLayout.LayoutParams(
+        startTime = System.currentTimeMillis();
+        recordDialog = new Dialog(getContext(), R.style.like_toast_dialog_style);
+        // view = new ImageView(getContext());
+        view = View.inflate(getContext(), R.layout.dialog_record, null);
+        mStateIV = (ImageView) view.findViewById(R.id.rc_audio_state_image);
+        mStateTV = (TextView) view.findViewById(R.id.rc_audio_state_text);
+        mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.anim_mic));
+        anim = (AnimationDrawable) mStateIV.getDrawable();
+        anim.start();
+        mStateIV.setVisibility(View.VISIBLE);
+        //mStateIV.setImageResource(R.drawable.ic_volume_1);
+        mStateTV.setVisibility(View.VISIBLE);
+        mStateTV.setText("手指上滑,取消发送");
+        recordDialog.setContentView(view, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         recordDialog.setOnDismissListener(onDismiss);
@@ -175,7 +177,7 @@ public class RecordButton extends AppCompatButton {
         if (intervalTime < MIN_INTERVAL_TIME) {
             LogUtil.d("录音时间太短");
             volumeHandler.sendEmptyMessageDelayed(-100, 500);
-             //view.setBackgroundResource(R.drawable.ic_voice_cancel);
+            //view.setBackgroundResource(R.drawable.ic_voice_cancel);
             mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_volume_wraning));
             mStateTV.setText("录音时间太短");
             anim.stop();
@@ -184,23 +186,23 @@ public class RecordButton extends AppCompatButton {
         /*    stopRecording();
             recordDialog.dismiss();*/
             return;
-        }else{
-             stopRecording();
+        } else {
+            stopRecording();
             recordDialog.dismiss();
         }
-        LogUtil.d("录音完成的路径:"+mFile);
+        LogUtil.d("录音完成的路径:" + mFile);
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(mFile);
             mediaPlayer.prepare();
             mediaPlayer.getDuration();
-            LogUtil.d("获取到的时长:"+mediaPlayer.getDuration()/1000);
-        }catch (Exception e){
+            LogUtil.d("获取到的时长:" + mediaPlayer.getDuration() / 1000);
+        } catch (Exception e) {
 
         }
 
         if (finishedListener != null)
-            finishedListener.onFinishedRecord(mFile,mediaPlayer.getDuration()/1000);
+            finishedListener.onFinishedRecord(mFile, mediaPlayer.getDuration() / 1000);
 
     }
 
@@ -208,20 +210,21 @@ public class RecordButton extends AppCompatButton {
      * 取消录音对话框和停止录音
      */
     public void cancelRecord() {
-         stopRecording();
+        stopRecording();
         recordDialog.dismiss();
-         File file = new File(mFile);
+        File file = new File(mFile);
         file.delete();
     }
 
     //获取类的实例
-   // ExtAudioRecorder extAudioRecorder; //压缩的录音（WAV）
+    // ExtAudioRecorder extAudioRecorder; //压缩的录音（WAV）
+
     /**
      * 执行录音操作
      */
     //int num = 0 ;
     private void startRecording() {
-          if (mRecorder != null) {
+        if (mRecorder != null) {
             mRecorder.reset();
         } else {
             mRecorder = new MediaRecorder();
@@ -230,23 +233,22 @@ public class RecordButton extends AppCompatButton {
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         File file = new File(mFile);
-        LogUtil.d("创建文件的路径:"+mFile);
-        LogUtil.d("文件创建成功:"+file.exists());
+        LogUtil.d("创建文件的路径:" + mFile);
+        LogUtil.d("文件创建成功:" + file.exists());
         mRecorder.setOutputFile(mFile);
-         try {
+        try {
             mRecorder.prepare();
             mRecorder.start();
-        }catch (Exception e){
-            LogUtil.d("preparestart异常,重新开始录音:"+e.toString());
-             e.printStackTrace();
+        } catch (Exception e) {
+            LogUtil.d("preparestart异常,重新开始录音:" + e.toString());
+            e.printStackTrace();
             mRecorder.release();
-            mRecorder = null ;
+            mRecorder = null;
             startRecording();
         }
        /* mThread = new  ObtainDecibelThread();
         mThread.start();*/
     }
-
 
 
     private void stopRecording() {
@@ -287,33 +289,33 @@ public class RecordButton extends AppCompatButton {
                 if (mRecorder == null || !running) {
                     break;
                 }
-               // int x = recorder.getMaxAmplitude(); //振幅
-                int db =   mRecorder.getMaxAmplitude() / 600;
-                LogUtil.d("检测到的分贝002:"+mRecorder);
-                if (db != 0 && y>=0) {
+                // int x = recorder.getMaxAmplitude(); //振幅
+                int db = mRecorder.getMaxAmplitude() / 600;
+                LogUtil.d("检测到的分贝002:" + mRecorder);
+                if (db != 0 && y >= 0) {
 
 
-                   int f = (int) (db/ 5);
-                    if (f ==0  )
+                    int f = (int) (db / 5);
+                    if (f == 0)
                         volumeHandler.sendEmptyMessage(0);
-                    else if (f  ==1)
+                    else if (f == 1)
                         volumeHandler.sendEmptyMessage(1);
-                    else if (f  ==2)
+                    else if (f == 2)
                         volumeHandler.sendEmptyMessage(2);
-                    else if (f  ==3)
+                    else if (f == 3)
                         volumeHandler.sendEmptyMessage(3);
-                    else if (f  ==4)
+                    else if (f == 4)
                         volumeHandler.sendEmptyMessage(4);
-                    else if (f  ==5)
+                    else if (f == 5)
                         volumeHandler.sendEmptyMessage(5);
-                    else if (f  ==6)
+                    else if (f == 6)
                         volumeHandler.sendEmptyMessage(6);
                     else
                         volumeHandler.sendEmptyMessage(7);
                 }
 
                 volumeHandler.sendEmptyMessage(-1);
-                if(System.currentTimeMillis() - startTime > 20000){
+                if (System.currentTimeMillis() - startTime > 20000) {
                     finishRecord();
                 }
 

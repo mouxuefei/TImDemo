@@ -11,9 +11,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.edocyun.timchat.R
 import com.edocyun.timchat.base.mvp.BaseMvpActivity
 import com.edocyun.timchat.constants.Constants.*
@@ -26,7 +24,6 @@ import com.edocyun.timchat.vp.api.*
 import com.edocyun.timchat.vp.contract.IChatContact
 import com.edocyun.timchat.vp.presenter.ChatPresenter
 import com.edocyun.timchat.widget.MediaManager
-import com.edocyun.timchat.widget.RecordButton
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -38,12 +35,11 @@ import java.util.*
 
 class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(),
     IChatContact.View, SwipeRefreshLayout.OnRefreshListener {
-
     private var mAdapter: ChatAdapter? = null
-
     private var ivAudio: ImageView? = null
-
     override fun getContentView() = R.layout.activity_chat
+    override var mPresenter: IChatContact.Presenter = ChatPresenter()
+
     override fun initView() {
         initRv()
         initListener()
@@ -64,51 +60,71 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         rlFile.setOnClickListener {
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
         }
+
         rlLocation.setOnClickListener { }
     }
 
     private fun initRv() {
         mAdapter = ChatAdapter(this, ArrayList())
-        val mLinearLayout = LinearLayoutManager(this)
-        rv_chat_list.layoutManager = mLinearLayout
         rv_chat_list.adapter = mAdapter
         swipe_chat.setOnRefreshListener(this)
-        mAdapter?.onItemChildClickListener =
-            BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-                val isSend = mAdapter?.getItem(position)?.senderId == mSenderId
-                if (ivAudio != null) {
+        mAdapter?.setOnItemClickListener { adapter, view, position ->
+            val item = adapter.getItem(position) as Message
+            when (item.msgType) {
+                MsgType.AUDIO -> {
+                    onPressAudio(item, view,position)
+                }
+                MsgType.IMAGE -> {
+                    onPressImage(item)
+                }
+            }
+        }
+    }
+
+    /**
+     * 点击音频
+     */
+    private fun onPressAudio(msg: Message, view: View, position: Int) {
+        val isSend = msg.userId == myId
+        if (ivAudio != null) {
+            if (isSend) {
+                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
+            } else {
+                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
+            }
+            ivAudio = null
+            MediaManager.reset()
+        } else {
+            ivAudio = view.findViewById<ImageView>(R.id.ivAudio)
+            MediaManager.reset()
+            if (isSend) {
+                ivAudio?.setBackgroundResource(R.drawable.audio_animation_right_list)
+            } else {
+                ivAudio?.setBackgroundResource(R.drawable.audio_animation_left_list)
+            }
+            val drawable = ivAudio?.background as AnimationDrawable
+            drawable.start()
+            mAdapter?.let {
+                MediaManager.playSound(
+                    this@ChatActivity, (it.data[position].body as AudioMsgBody).localPath
+                ) {
                     if (isSend) {
                         ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
                     } else {
                         ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
                     }
-                    ivAudio = null
-                    MediaManager.reset()
-                } else {
-                    ivAudio = view.findViewById<ImageView>(R.id.ivAudio)
-                    MediaManager.reset()
-                    if (isSend) {
-                        ivAudio?.setBackgroundResource(R.drawable.audio_animation_right_list)
-                    } else {
-                        ivAudio?.setBackgroundResource(R.drawable.audio_animation_left_list)
-                    }
-                    val drawable = ivAudio?.background as AnimationDrawable
-                    drawable.start()
-                    mAdapter?.let {
-                        MediaManager.playSound(
-                            this@ChatActivity, (it.data[position].body as AudioMsgBody).localPath
-                        ) {
-                            if (isSend) {
-                                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
-                            } else {
-                                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
-                            }
-                            MediaManager.release()
-                        }
-                    }
-
+                    MediaManager.release()
                 }
             }
+
+        }
+    }
+
+    /**
+     * 点击图片
+     */
+    private fun onPressImage(msg: Message) {
+        LogUtil.e("onPressImage")
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -126,7 +142,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             .bindAudioBtn(btnAudio)
             .bindAudioIv(iv_Audio)
 //            .bindEmojiData()
-        //底部布局弹出,聊天列表上滑
+        //底部布局弹出,聊天列表上滑到最后一位
         rv_chat_list.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (bottom < oldBottom) {
                 rv_chat_list.post(Runnable {
@@ -139,6 +155,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                 })
             }
         })
+
         //点击空白区域关闭键盘
         rv_chat_list.setOnTouchListener(OnTouchListener { _, _ ->
             mUiHelper.hideBottomLayout(false)
@@ -147,14 +164,15 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             ivEmo.setImageResource(R.mipmap.ic_emoji)
             false
         })
-        //
-        (btnAudio as RecordButton).setOnFinishedRecordListener { audioPath, time ->
-            LogUtil.d("录音结束回调")
+
+        //录音结束回调
+        btnAudio.setOnFinishedRecordListener { audioPath, time ->
             val file = File(audioPath)
             if (file.exists()) {
                 sendAudioMessage(audioPath, time)
             }
         }
+
     }
 
 
@@ -248,8 +266,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     private fun getBaseSendMessage(msgType: MsgType): Message {
         val mMessgae = Message()
         mMessgae.uuid = UUID.randomUUID().toString() + ""
-        mMessgae.senderId = mSenderId
-        mMessgae.targetId = mTargetId
+        mMessgae.userId = myId
         mMessgae.sentTime = System.currentTimeMillis()
         mMessgae.sentStatus = MsgSendStatus.SENDING
         mMessgae.msgType = msgType
@@ -260,8 +277,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     private fun getBaseReceiveMessage(msgType: MsgType): Message? {
         val mMessgae = Message()
         mMessgae.uuid = UUID.randomUUID().toString() + ""
-        mMessgae.senderId = mTargetId
-        mMessgae.targetId = mSenderId
+        mMessgae.userId = otherId
         mMessgae.sentTime = System.currentTimeMillis()
         mMessgae.sentStatus = MsgSendStatus.SENDING
         mMessgae.msgType = msgType
@@ -292,7 +308,6 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
     }
 
-    override var mPresenter: IChatContact.Presenter = ChatPresenter()
 
     override fun onRefresh() {
         //下拉刷新模拟获取历史消息

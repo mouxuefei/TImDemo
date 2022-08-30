@@ -1,10 +1,9 @@
 package com.edocyun.timchat.vp.api;
 
 
+public class MsgBody implements java.io.Serializable {
 
-public  class   MsgBody implements java.io.Serializable {
-
-     private MsgType localMsgType;
+    private MsgType localMsgType;
 
 
     public MsgType getLocalMsgType() {

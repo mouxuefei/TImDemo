@@ -36,7 +36,7 @@ class MyApplication : Application() {
     private fun initLogger() {
         Logger.addLogAdapter(object : AndroidLogAdapter() {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
-                return BuildConfig.DEBUG
+                return true
             }
         })
     }

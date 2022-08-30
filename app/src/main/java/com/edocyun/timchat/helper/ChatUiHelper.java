@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.edocyun.timchat.R;
 import com.edocyun.timchat.emoji.EmojiAdapter;
 import com.edocyun.timchat.emoji.EmojiBean;
@@ -117,7 +118,7 @@ public class ChatUiHelper {
             } else {
                 entranceAdapter = new EmojiAdapter(mListEmoji.subList(index * EVERY_PAGE_SIZE, (index + 1) * EVERY_PAGE_SIZE), index, EVERY_PAGE_SIZE);
             }
-            entranceAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            entranceAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     EmojiBean mEmojiBean = (EmojiBean) adapter.getData().get(position);

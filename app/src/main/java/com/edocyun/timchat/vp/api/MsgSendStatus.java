@@ -8,7 +8,4 @@ public enum MsgSendStatus {
     FAILED,
     //已发送
     SENT;
-
-
-
 }

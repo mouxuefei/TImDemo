@@ -8,8 +8,8 @@ package com.edocyun.timchat.constants;
  * @desc
  */
 public class Constants {
-    public static final String mSenderId = "right";
-    public static final String mTargetId = "left";
+    public static final String myId = "right";
+    public static final String otherId = "left";
     public static final int REQUEST_CODE_IMAGE = 0;
     public static final int REQUEST_CODE_VEDIO = 1111;
     public static final int REQUEST_CODE_FILE = 2222;
