@@ -2,10 +2,9 @@ package com.edocyun.timchat.vp.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.media.MediaMetadataRetriever
-import android.os.Environment
+import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.view.View.OnTouchListener
@@ -16,20 +15,16 @@ import com.edocyun.timchat.R
 import com.edocyun.timchat.base.mvp.BaseMvpActivity
 import com.edocyun.timchat.constants.Constants.*
 import com.edocyun.timchat.helper.ChatUiHelper
-import com.edocyun.timchat.util.FileUtils
-import com.edocyun.timchat.util.LogUtil
-import com.edocyun.timchat.util.PictureFileUtil
+import com.edocyun.timchat.util.*
 import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*
 import com.edocyun.timchat.vp.contract.IChatContact
 import com.edocyun.timchat.vp.presenter.ChatPresenter
-import com.edocyun.timchat.util.MediaManager
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_add_layout.*
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 
@@ -72,7 +67,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             val item = adapter.getItem(position) as Message
             when (item.msgType) {
                 MsgType.AUDIO -> {
-                    onPressAudio(item, view,position)
+                    onPressAudio(item, view, position)
                 }
                 MsgType.IMAGE -> {
                     onPressImage(item)
@@ -203,35 +198,42 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
 
     //视频消息
-    private fun sendVedioMessage(media: LocalMedia) {
+    private fun sendVideoMessage(media: LocalMedia) {
         val mMessgae = getBaseSendMessage(MsgType.VIDEO)
-        //生成缩略图路径
-        val vedioPath = media.path
+        val path = media.path
+        val videoPath = FileUtil.getPathFromUri(Uri.parse(path))
         val mediaMetadataRetriever = MediaMetadataRetriever()
-        mediaMetadataRetriever.setDataSource(vedioPath)
-        val bitmap = mediaMetadataRetriever.frameAtTime
-        val imgname = System.currentTimeMillis().toString() + ".jpg"
-        val urlpath = Environment.getExternalStorageDirectory().toString() + "/" + imgname
-        val f = File(urlpath)
         try {
-            if (f.exists()) {
-                f.delete()
+            mediaMetadataRetriever.setDataSource(videoPath);
+            val sDuration =
+                mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION) //时长(毫秒)
+            val bitmap =
+                mediaMetadataRetriever.getFrameAtTime(
+                    0,
+                    MediaMetadataRetriever.OPTION_NEXT_SYNC
+                ) //缩略图
+            val imgWidth = bitmap?.width
+            val imgHeight = bitmap?.height
+            if (bitmap == null) {
+                LogUtil.e("buildVideoMessage() bitmap is null")
+                return
             }
-            val out = FileOutputStream(f)
-            bitmap?.compress(Bitmap.CompressFormat.PNG, 90, out)
-            out.flush()
-            out.close()
+            val duration = java.lang.Long.valueOf(sDuration)
+            val imgPath: String = FileUtil.saveBitmap("JCamera", bitmap)
+            val mImageMsgBody = VideoMsgBody()
+            mImageMsgBody.extra = imgPath
+            mMessgae.body = mImageMsgBody
+            //开始发送
+            mAdapter?.addData(mMessgae)
+            //模拟两秒后发送成功
+            updateMsg(mMessgae)
         } catch (e: Exception) {
             LogUtil.d("视频缩略图路径获取失败：$e")
             e.printStackTrace()
+        } finally {
+            mediaMetadataRetriever.release()
         }
-        val mImageMsgBody = VideoMsgBody()
-        mImageMsgBody.extra = urlpath
-        mMessgae.body = mImageMsgBody
-        //开始发送
-        mAdapter?.addData(mMessgae)
-        //模拟两秒后发送成功
-        updateMsg(mMessgae)
+
     }
 
     //文件消息
@@ -239,8 +241,8 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         val mMessgae = getBaseSendMessage(MsgType.FILE)
         val mFileMsgBody = FileMsgBody()
         mFileMsgBody.localPath = path
-        mFileMsgBody.displayName = FileUtils.getFileName(path)
-        mFileMsgBody.size = FileUtils.getFileLength(path)
+        mFileMsgBody.displayName = FileUtil.getFileName(this, Uri.parse(path))
+        mFileMsgBody.size = FileUtil.getFileLength(path)
         mMessgae.body = mFileMsgBody
         //开始发送
         mAdapter?.addData(mMessgae)
@@ -328,7 +330,6 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         mMessgaeImage!!.body = mImageMsgBody
         mReceiveMsgList.add(mMessgaeImage)
         //构建文件消息
-        //构建文件消息
         val mMessgaeFile = getBaseReceiveMessage(MsgType.FILE)
         val mFileMsgBody = FileMsgBody()
         mFileMsgBody.displayName = "收到的文件"
@@ -358,7 +359,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                     val selectListVideo = PictureSelector.obtainMultipleResult(data)
                     for (media in selectListVideo) {
                         LogUtil.d("获取视频路径成功:" + media.path)
-                        sendVedioMessage(media)
+                        sendVideoMessage(media)
                     }
                 }
             }

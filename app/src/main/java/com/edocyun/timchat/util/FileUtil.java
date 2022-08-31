@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -480,4 +482,44 @@ public class FileUtil {
         }
     }
 
+
+    public static long getFileLength(final String filePath) {
+        boolean isURL = filePath.matches("[a-zA-z]+://[^\\s]*");
+        if (isURL) {
+            try {
+                HttpURLConnection conn = (HttpURLConnection) new URL(filePath).openConnection();
+                conn.setRequestProperty("Accept-Encoding", "identity");
+                conn.connect();
+                if (conn.getResponseCode() == 200) {
+                    return conn.getContentLength();
+                }
+                return -1;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return getFileLength(getFileByPath(filePath));
+    }
+
+    public static boolean isFile(final File file) {
+        return file != null && file.exists() && file.isFile();
+    }
+        public static long getFileLength(final File file) {
+        if (!isFile(file)) return -1;
+        return file.length();
+    }
+
+    public static File getFileByPath(final String filePath) {
+        return isSpace(filePath) ? null : new File(filePath);
+    }
+
+    private static boolean isSpace(final String s) {
+        if (s == null) return true;
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

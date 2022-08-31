@@ -69,6 +69,7 @@ public class ChatAdapter extends BaseDelegateMultiAdapter<Message, BaseViewHolde
                 return 0;
             }
         });
+
         getMultiTypeDelegate().addItemType(TYPE_SEND_TEXT, SEND_TEXT)
                 .addItemType(TYPE_RECEIVE_TEXT, RECEIVE_TEXT)
                 .addItemType(TYPE_SEND_IMAGE, SEND_IMAGE)
@@ -83,8 +84,11 @@ public class ChatAdapter extends BaseDelegateMultiAdapter<Message, BaseViewHolde
 
     @Override
     protected void convert(BaseViewHolder helper, Message item) {
-        setContent(helper, item);
+        //发送的状态
         setStatus(helper, item);
+        //发送的内容
+        setContent(helper, item);
+
     }
 
 
