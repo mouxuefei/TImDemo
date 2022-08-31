@@ -63,14 +63,20 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         mAdapter = ChatAdapter(this, ArrayList())
         rv_chat_list.adapter = mAdapter
         swipe_chat.setOnRefreshListener(this)
-        mAdapter?.setOnItemClickListener { adapter, view, position ->
+        mAdapter?.addChildClickViewIds(R.id.chat_item_header, R.id.chat_item_layout_content)
+        mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as Message
-            when (item.msgType) {
-                MsgType.AUDIO -> {
-                    onPressAudio(item, view, position)
-                }
-                MsgType.IMAGE -> {
-                    onPressImage(item)
+            val viewId = view.id
+            if (viewId == R.id.chat_item_header) {
+
+            } else if (viewId == R.id.chat_item_layout_content) {
+                when (item.msgType) {
+                    MsgType.AUDIO -> {
+                        onPressAudio(item, view, position)
+                    }
+                    MsgType.IMAGE -> {
+                        onPressImage(item)
+                    }
                 }
             }
         }
@@ -326,15 +332,15 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         val mMessgaeImage = getBaseReceiveMessage(MsgType.IMAGE)
         val mImageMsgBody = ImageMsgBody()
         mImageMsgBody.thumbUrl =
-            "https://c-ssl.duitang.com/uploads/item/201208/30/20120830173930_PBfJE.thumb.700_0.jpeg"
-        mMessgaeImage!!.body = mImageMsgBody
+            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F01%2F210924132020A05-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664517206&t=e7cc1c3246afac219b23950f73f66ba4"
+        mMessgaeImage?.body = mImageMsgBody
         mReceiveMsgList.add(mMessgaeImage)
         //构建文件消息
         val mMessgaeFile = getBaseReceiveMessage(MsgType.FILE)
         val mFileMsgBody = FileMsgBody()
         mFileMsgBody.displayName = "收到的文件"
         mFileMsgBody.size = 12
-        mMessgaeFile!!.body = mFileMsgBody
+        mMessgaeFile?.body = mFileMsgBody
         mReceiveMsgList.add(mMessgaeFile)
         mAdapter?.addData(0, mReceiveMsgList)
         swipe_chat.isRefreshing = false
