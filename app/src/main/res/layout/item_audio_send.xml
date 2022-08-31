@@ -52,10 +52,12 @@
                 android:text="6''" />
 
             <RelativeLayout
+                android:padding="10dp"
                 android:id="@+id/rlAudio"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/message_text_send">
+                android:minWidth="64dp"
+                android:background="@drawable/send_item_bg">
 
                 <ImageView
                     android:id="@+id/ivAudio"

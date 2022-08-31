@@ -49,7 +49,9 @@
                 android:id="@+id/chat_item_content_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/message_text_receive"
+                android:background="@drawable/receive_item_bg"
+                android:gravity="center_horizontal"
+                android:minWidth="64dp"
                 android:text="你好"
                 android:textColor="#333333"
                 android:textSize="14dp" />
