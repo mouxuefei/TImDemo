@@ -21,7 +21,6 @@ public class SetPermissionDialog extends Dialog implements View.OnClickListener 
     public SetPermissionDialog(Context context) {
         super(context, R.style.common_my_dialog_style);
         this.context = context;
-        //    this.buttonListener = buttonListener;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(0x00000000));
     }

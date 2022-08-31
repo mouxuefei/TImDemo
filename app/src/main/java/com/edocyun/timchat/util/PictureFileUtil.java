@@ -47,7 +47,6 @@ public class PictureFileUtil {
 
 
     public static void openGalleryVideo(Activity mContext, int requstcode) {
-
         XXPermissions.with(mContext)
                 .permission(Permission.WRITE_EXTERNAL_STORAGE)
                 .permission(Permission.READ_EXTERNAL_STORAGE)
