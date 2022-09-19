@@ -72,8 +72,8 @@
                     android:background="@drawable/message_shap_chat_bg"
                     android:maxLines="3"
                     android:minHeight="36dp"
-                    android:paddingLeft="13dp"
-                    android:textSize="11dp" />
+                    android:paddingHorizontal="12dp"
+                    android:textSize="14dp" />
 
                 <com.edocyun.timchat.widget.RecordButton
                     android:id="@+id/btnAudio"
@@ -91,7 +91,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_margin="10px"
-                android:src="@mipmap/ic_emoji" />
+                android:src="@mipmap/ic_emoji"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/ivAdd"
