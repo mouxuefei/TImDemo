@@ -1,4 +1,4 @@
-package com.edocyun.timchat.base.http.entity
+package com.edocyun.timchat.network.entity
 
 /**
  * success: boolean;

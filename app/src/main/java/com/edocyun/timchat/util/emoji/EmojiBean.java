@@ -1,4 +1,4 @@
-package com.edocyun.timchat.emoji;
+package com.edocyun.timchat.util.emoji;
 
 /**
  * Describe: 表情的实体类

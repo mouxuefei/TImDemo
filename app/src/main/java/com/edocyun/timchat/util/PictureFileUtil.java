@@ -2,7 +2,6 @@ package com.edocyun.timchat.util;
 
 import android.app.Activity;
 
-import com.edocyun.timchat.imageEngine.GlideEngine;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.luck.picture.lib.PictureSelector;

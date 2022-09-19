@@ -1,7 +1,7 @@
 package com.edocyun.timchat.vp.api
 
-import com.edocyun.timchat.base.http.constant.ApiConfig
-import com.edocyun.timchat.base.http.retrofit.RetrofitFactory
+import com.edocyun.timchat.network.constant.ApiConfig
+import com.edocyun.timchat.network.retrofit.RetrofitFactory
 import okhttp3.Request
 
 /**

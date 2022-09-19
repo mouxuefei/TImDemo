@@ -1,7 +1,7 @@
 package com.edocyun.timchat.vp.contract
 
-import com.edocyun.timchat.base.mvp.IPresenter
-import com.edocyun.timchat.base.mvp.IView
+import com.edocyun.timchat.base.IPresenter
+import com.edocyun.timchat.base.IView
 import com.edocyun.timchat.vp.api.MessageEntity
 
 /**

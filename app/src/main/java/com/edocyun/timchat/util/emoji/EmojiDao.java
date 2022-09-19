@@ -1,4 +1,4 @@
-package com.edocyun.timchat.emoji;
+package com.edocyun.timchat.util.emoji;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

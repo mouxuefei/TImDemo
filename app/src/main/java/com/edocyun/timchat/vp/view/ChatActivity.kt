@@ -12,9 +12,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.edocyun.timchat.R
-import com.edocyun.timchat.base.mvp.BaseMvpActivity
+import com.edocyun.timchat.base.BaseMvpActivity
 import com.edocyun.timchat.constants.Constants.*
-import com.edocyun.timchat.helper.ChatUiHelper
+import com.edocyun.timchat.util.ChatUiHelper
 import com.edocyun.timchat.util.*
 import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*

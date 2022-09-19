@@ -1,9 +1,9 @@
-package com.edocyun.timchat.base.http
+package com.edocyun.timchat.network
 
 
-import com.edocyun.timchat.base.http.entity.BaseEntity
-import com.edocyun.timchat.base.mvp.ITopPresenter
-import com.edocyun.timchat.base.mvp.ITopView
+import com.edocyun.timchat.network.entity.BaseEntity
+import com.edocyun.timchat.base.ITopPresenter
+import com.edocyun.timchat.base.ITopView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

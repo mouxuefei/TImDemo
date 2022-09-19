@@ -1,4 +1,4 @@
-package com.edocyun.timchat.base.mvp
+package com.edocyun.timchat.base
 
 import io.reactivex.disposables.CompositeDisposable
 

@@ -1,7 +1,7 @@
 package com.edocyun.timchat.vp.api
 
-import com.edocyun.timchat.base.http.entity.BaseEntity
-import com.edocyun.timchat.base.http.entity.BaseListEntity
+import com.edocyun.timchat.network.entity.BaseEntity
+import com.edocyun.timchat.network.entity.BaseListEntity
 import io.reactivex.Observable
 import retrofit2.http.*
 

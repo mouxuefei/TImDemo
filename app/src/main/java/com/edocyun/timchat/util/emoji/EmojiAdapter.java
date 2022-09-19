@@ -1,4 +1,4 @@
-package com.edocyun.timchat.emoji;
+package com.edocyun.timchat.util.emoji;
 
 
 import com.chad.library.adapter.base.BaseQuickAdapter;

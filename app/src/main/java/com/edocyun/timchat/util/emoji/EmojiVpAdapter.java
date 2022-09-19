@@ -1,4 +1,4 @@
-package com.edocyun.timchat.emoji;
+package com.edocyun.timchat.util.emoji;
 
 import android.view.View;
 import android.view.ViewGroup;

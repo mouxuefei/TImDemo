@@ -1,6 +1,4 @@
-package com.edocyun.timchat.base.mvp
-
-import com.edocyun.timchat.base.toast
+package com.edocyun.timchat.base
 
 
 /**

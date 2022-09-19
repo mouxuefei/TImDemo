@@ -1,4 +1,4 @@
-package com.edocyun.timchat.base.http.constant
+package com.edocyun.timchat.network.constant
 
 /**
  * Created by mou on 2017/9/28.

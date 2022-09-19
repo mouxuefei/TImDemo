@@ -1,4 +1,4 @@
-package com.edocyun.timchat.base.http.constant
+package com.edocyun.timchat.network.constant
 
 /**
  * @FileName: com.mou.demo.http.constant.URLConstant.java

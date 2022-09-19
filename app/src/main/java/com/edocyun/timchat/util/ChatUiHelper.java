@@ -1,4 +1,4 @@
-package com.edocyun.timchat.helper;
+package com.edocyun.timchat.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -25,11 +25,10 @@ import android.widget.RelativeLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.edocyun.timchat.R;
-import com.edocyun.timchat.emoji.EmojiAdapter;
-import com.edocyun.timchat.emoji.EmojiBean;
-import com.edocyun.timchat.emoji.EmojiDao;
-import com.edocyun.timchat.emoji.EmojiVpAdapter;
-import com.edocyun.timchat.util.LogUtil;
+import com.edocyun.timchat.util.emoji.EmojiAdapter;
+import com.edocyun.timchat.util.emoji.EmojiBean;
+import com.edocyun.timchat.util.emoji.EmojiDao;
+import com.edocyun.timchat.util.emoji.EmojiVpAdapter;
 import com.edocyun.timchat.widget.IndicatorView;
 import com.edocyun.timchat.widget.RecordButton;
 

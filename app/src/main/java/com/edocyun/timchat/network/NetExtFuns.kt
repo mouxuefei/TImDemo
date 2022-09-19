@@ -2,11 +2,11 @@
  * Copyright (c) 18-1-8 下午1:38. XQ Yang
  */
 
-package com.edocyun.timchat.base.http
+package com.edocyun.timchat.network
 
-import com.edocyun.timchat.base.http.entity.BaseEntity
-import com.edocyun.timchat.base.mvp.ITopPresenter
-import com.edocyun.timchat.base.mvp.ITopView
+import com.edocyun.timchat.network.entity.BaseEntity
+import com.edocyun.timchat.base.ITopPresenter
+import com.edocyun.timchat.base.ITopView
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 

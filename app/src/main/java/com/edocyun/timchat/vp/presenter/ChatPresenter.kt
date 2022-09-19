@@ -1,9 +1,9 @@
 package com.edocyun.timchat.vp.presenter
 
-import com.edocyun.timchat.base.http.entity.BaseEntity
-import com.edocyun.timchat.base.http.entity.BaseListEntity
-import com.edocyun.timchat.base.http.fetch
-import com.edocyun.timchat.base.mvp.BasePresenterKt
+import com.edocyun.timchat.network.entity.BaseEntity
+import com.edocyun.timchat.network.entity.BaseListEntity
+import com.edocyun.timchat.network.fetch
+import com.edocyun.timchat.base.BasePresenterKt
 import com.edocyun.timchat.vp.api.ChatMessageDTO
 import com.edocyun.timchat.vp.api.ChatRetrofit
 import com.edocyun.timchat.vp.api.MessageEntity

@@ -1,4 +1,4 @@
-package com.edocyun.timchat.imageEngine;
+package com.edocyun.timchat.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

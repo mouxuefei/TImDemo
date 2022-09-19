@@ -1,4 +1,4 @@
-package com.edocyun.timchat.base.http.retrofit
+package com.edocyun.timchat.network.retrofit
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
