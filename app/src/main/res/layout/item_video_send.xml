@@ -43,18 +43,14 @@
             android:orientation="horizontal">
 
 
-            <com.edocyun.timchat.widget.BubbleImageView
+            <ImageView
                 android:id="@+id/bivPic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:adjustViewBounds="true"
+                android:background="@drawable/send_item_bg"
                 android:scaleType="centerCrop"
-                android:transitionName="sharedView"
-                app:angle="6dp"
-                app:arrowHeight="8dp"
-                app:arrowLocation="right"
-                app:arrowPosition="15dp"
-                app:arrowWidth="5dp" />
+                android:transitionName="sharedView" />
 
 
             <ImageView
