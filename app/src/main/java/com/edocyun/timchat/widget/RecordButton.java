@@ -8,6 +8,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -84,7 +85,7 @@ public class RecordButton extends AppCompatButton {
 
     @SuppressLint("HandlerLeak")
     private void init() {
-        volumeHandler = new Handler() {
+        volumeHandler = new Handler(Looper.myLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == -100) {

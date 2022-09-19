@@ -55,7 +55,6 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         rlFile.setOnClickListener {
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
         }
-
         rlLocation.setOnClickListener { }
     }
 
