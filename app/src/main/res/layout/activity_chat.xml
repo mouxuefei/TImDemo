@@ -17,14 +17,14 @@
         android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_chat"
+            android:id="@+id/swipeChat"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_chat_list"
+                android:id="@+id/rvChatList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -50,7 +50,7 @@
             >
 
             <ImageView
-                android:id="@+id/iv_Audio"
+                android:id="@+id/ivAudioIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_margin="10px"
@@ -66,7 +66,7 @@
                 android:paddingBottom="6dp">
 
                 <EditText
-                    android:id="@+id/et_content"
+                    android:id="@+id/etContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/message_shap_chat_bg"
@@ -103,7 +103,7 @@
                 android:src="@mipmap/ic_add" />
 
             <com.edocyun.timchat.widget.StateButton
-                android:id="@+id/btn_send"
+                android:id="@+id/btnSend"
                 android:layout_width="50dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="10dp"
@@ -124,7 +124,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/bottom_layout"
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone">

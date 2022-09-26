@@ -3,8 +3,6 @@ package com.edocyun.timchat.vp.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.view.View.OnTouchListener
@@ -19,10 +17,8 @@ import com.edocyun.timchat.util.*
 import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*
 import com.edocyun.timchat.vp.contract.IChatContact
-import com.edocyun.timchat.vp.mock.getMockMessageList
 import com.edocyun.timchat.vp.presenter.ChatPresenter
 import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_add_layout.*
 import java.io.File
@@ -47,9 +43,9 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     }
 
     private fun initListener() {
-        btn_send.setOnClickListener {
-            mPresenter.sendTextMsg(et_content.text.toString())
-            et_content.setText("")
+        btnSend.setOnClickListener {
+            mPresenter.sendTextMsg(etContent.text.toString())
+            etContent.setText("")
         }
         rlPhoto.setOnClickListener {
             PictureFileUtil.openGalleryPic(this@ChatActivity, REQUEST_CODE_IMAGE)
@@ -67,8 +63,8 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
     private fun initRv() {
         mAdapter = ChatAdapter(this, ArrayList())
-        rv_chat_list.adapter = mAdapter
-        swipe_chat.setOnRefreshListener(this)
+        rvChatList.adapter = mAdapter
+        swipeChat.setOnRefreshListener(this)
         mAdapter?.addChildClickViewIds(R.id.chat_item_header, R.id.chat_item_layout_content)
         mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as Message
@@ -139,23 +135,23 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         //mBtnAudio
         val mUiHelper = ChatUiHelper.with(this)
         mUiHelper.bindContentLayout(llContent)
-            .bindttToSendButton(btn_send)
-            .bindEditText(et_content)
-            .bindBottomLayout(bottom_layout)
+            .bindttToSendButton(btnSend)
+            .bindEditText(etContent)
+            .bindBottomLayout(bottomLayout)
             .bindEmojiLayout(rlEmotion as LinearLayout?)
             .bindAddLayout(llAdd as LinearLayout?)
             .bindToAddButton(ivAdd)
             .bindToEmojiButton(ivEmo)
             .bindAudioBtn(btnAudio)
-            .bindAudioIv(iv_Audio)
+            .bindAudioIv(ivAudioIcon)
 //            .bindEmojiData()
         //底部布局弹出,聊天列表上滑到最后一位
-        rv_chat_list.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        rvChatList.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (bottom < oldBottom) {
-                rv_chat_list.post(Runnable {
+                rvChatList.post(Runnable {
                     mAdapter?.let {
                         if (it.itemCount > 0) {
-                            rv_chat_list.smoothScrollToPosition(it.itemCount - 1)
+                            rvChatList.smoothScrollToPosition(it.itemCount - 1)
                         }
                     }
 
@@ -164,10 +160,10 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         })
 
         //点击空白区域关闭键盘
-        rv_chat_list.setOnTouchListener(OnTouchListener { _, _ ->
+        rvChatList.setOnTouchListener(OnTouchListener { _, _ ->
             mUiHelper.hideBottomLayout(false)
             mUiHelper.hideSoftInput()
-            et_content.clearFocus()
+            etContent.clearFocus()
             ivEmo.setImageResource(R.mipmap.ic_emoji)
             false
         })
@@ -179,12 +175,11 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                 mPresenter.sendAudioMessage(audioPath, time)
             }
         }
-
     }
 
     private fun updateMsg(mMessgae: Message) {
         mAdapter?.let {
-            rv_chat_list.scrollToPosition(it.itemCount - 1)
+            rvChatList.scrollToPosition(it.itemCount - 1)
             //模拟2秒后发送成功
             Handler().postDelayed({
                 var position = 0
@@ -205,14 +200,14 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     override fun fetchDataSuccess(isLoadMore: Boolean, data: MutableList<Message>) {
         if (isLoadMore) {
             mAdapter?.addData(0, data)
-            swipe_chat.isRefreshing = false
+            swipeChat.isRefreshing = false
         } else {
             mAdapter?.setNewInstance(data)
         }
     }
 
     override fun fetchDataError() {
-        swipe_chat.isRefreshing = false
+        swipeChat.isRefreshing = false
     }
 
     override fun updateMessage(message: Message) {
