@@ -133,8 +133,8 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     @SuppressLint("ClickableViewAccessibility")
     private fun initChatUi() {
         //mBtnAudio
-        val mUiHelper = ChatUiHelper.with(this)
-        mUiHelper.bindContentLayout(llContent)
+        val uiHelper = ChatUiHelper.with(this)
+        uiHelper.bindContentLayout(llContent)
             .bindttToSendButton(btnSend)
             .bindEditText(etContent)
             .bindBottomLayout(bottomLayout)
@@ -161,8 +161,8 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
         //点击空白区域关闭键盘
         rvChatList.setOnTouchListener(OnTouchListener { _, _ ->
-            mUiHelper.hideBottomLayout(false)
-            mUiHelper.hideSoftInput()
+            uiHelper.hideBottomLayout(false)
+            uiHelper.hideSoftInput()
             etContent.clearFocus()
             ivEmo.setImageResource(R.mipmap.ic_emoji)
             false
