@@ -28,7 +28,7 @@ import java.util.*
 class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(),
     IChatContact.View, SwipeRefreshLayout.OnRefreshListener {
     private var mAdapter: ChatAdapter? = null
-    private var ivAudio: ImageView? = null
+    private var ivItemAudio: ImageView? = null
     override fun getContentView() = R.layout.activity_chat
     override var mPresenter: IChatContact.Presenter = ChatPresenter()
 
@@ -89,32 +89,32 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
      */
     private fun onPressAudio(msg: Message, view: View, position: Int) {
         val isSend = msg.userId == myId
-        if (ivAudio != null) {
+        if (ivItemAudio != null) {
             if (isSend) {
-                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
+                ivItemAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
             } else {
-                ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
+                ivItemAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
             }
-            ivAudio = null
+            ivItemAudio = null
             MediaManager.reset()
         } else {
-            ivAudio = view.findViewById<ImageView>(R.id.ivAudio)
+            ivItemAudio = view.findViewById<ImageView>(R.id.ivAudio)
             MediaManager.reset()
             if (isSend) {
-                ivAudio?.setBackgroundResource(R.drawable.audio_animation_right_list)
+                ivItemAudio?.setBackgroundResource(R.drawable.audio_animation_right_list)
             } else {
-                ivAudio?.setBackgroundResource(R.drawable.audio_animation_left_list)
+                ivItemAudio?.setBackgroundResource(R.drawable.audio_animation_left_list)
             }
-            val drawable = ivAudio?.background as AnimationDrawable
+            val drawable = ivItemAudio?.background as AnimationDrawable
             drawable.start()
             mAdapter?.let {
                 MediaManager.playSound(
                     this@ChatActivity, (it.data[position].body as AudioMsgBody).localPath
                 ) {
                     if (isSend) {
-                        ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
+                        ivItemAudio?.setBackgroundResource(R.mipmap.audio_animation_list_right_3)
                     } else {
-                        ivAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
+                        ivItemAudio?.setBackgroundResource(R.mipmap.audio_animation_list_left_3)
                     }
                     MediaManager.release()
                 }
