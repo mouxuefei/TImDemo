@@ -68,16 +68,23 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         mAdapter?.addChildClickViewIds(R.id.chat_item_header, R.id.chat_item_layout_content)
         mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as Message
-            val viewId = view.id
-            if (viewId == R.id.chat_item_header) {
+            when(view.id){
+                //头像
+                R.id.chat_item_header->{
 
-            } else if (viewId == R.id.chat_item_layout_content) {
-                when (item.msgType) {
-                    MsgType.AUDIO -> {
-                        onPressAudio(item, view, position)
-                    }
-                    MsgType.IMAGE -> {
-                        onPressImage(item)
+                }
+                //内容
+                R.id.chat_item_layout_content->{
+                    when (item.msgType) {
+                        MsgType.AUDIO -> {
+                            onPressAudio(item, view, position)
+                        }
+                        MsgType.IMAGE -> {
+                            onPressImage(item)
+                        }
+                        else ->{
+
+                        }
                     }
                 }
             }
