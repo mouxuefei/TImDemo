@@ -19,6 +19,7 @@ import com.edocyun.timchat.util.*
 import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*
 import com.edocyun.timchat.vp.contract.IChatContact
+import com.edocyun.timchat.vp.mock.getMockMessageList
 import com.edocyun.timchat.vp.presenter.ChatPresenter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
@@ -41,9 +42,13 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         initChatUi()
     }
 
+    override fun initData() {
+        mPresenter.fetchData(false)
+    }
+
     private fun initListener() {
         btn_send.setOnClickListener {
-            sendTextMsg(et_content.text.toString())
+            mPresenter.sendTextMsg(et_content.text.toString())
             et_content.setText("")
         }
         rlPhoto.setOnClickListener {
@@ -55,7 +60,9 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         rlFile.setOnClickListener {
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
         }
-        rlLocation.setOnClickListener { }
+        rlLocation.setOnClickListener {
+            //TODO:位置
+        }
     }
 
     private fun initRv() {
@@ -82,7 +89,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     }
 
     /**
-     * 点击音频
+     * 点击音频，播放
      */
     private fun onPressAudio(msg: Message, view: View, position: Int) {
         val isSend = msg.userId == myId
@@ -124,7 +131,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
      * 点击图片
      */
     private fun onPressImage(msg: Message) {
-        LogUtil.e("onPressImage")
+        //TODO: 查看大图
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -169,126 +176,10 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         btnAudio.setOnFinishedRecordListener { audioPath, time ->
             val file = File(audioPath)
             if (file.exists()) {
-                sendAudioMessage(audioPath, time)
+                mPresenter.sendAudioMessage(audioPath, time)
             }
         }
 
-    }
-
-
-    //文本消息
-    private fun sendTextMsg(hello: String) {
-        val mMessgae = getBaseSendMessage(MsgType.TEXT)
-        val mTextMsgBody = TextMsgBody()
-        mTextMsgBody.message = hello
-        mMessgae.body = mTextMsgBody
-        //开始发送
-        mAdapter?.addData(mMessgae)
-        //模拟两秒后发送成功
-        updateMsg(mMessgae)
-    }
-
-
-    //图片消息
-    private fun sendImageMessage(media: LocalMedia) {
-        val mMessgae = getBaseSendMessage(MsgType.IMAGE)
-        val mImageMsgBody = ImageMsgBody()
-        mImageMsgBody.thumbUrl = media.compressPath
-        mMessgae.body = mImageMsgBody
-        //开始发送
-        mAdapter?.addData(mMessgae)
-        //模拟两秒后发送成功
-        updateMsg(mMessgae)
-    }
-
-
-    //视频消息
-    private fun sendVideoMessage(media: LocalMedia) {
-        val mMessgae = getBaseSendMessage(MsgType.VIDEO)
-        val path = media.path
-        val videoPath = FileUtil.getPathFromUri(Uri.parse(path))
-        val mediaMetadataRetriever = MediaMetadataRetriever()
-        try {
-            mediaMetadataRetriever.setDataSource(videoPath);
-            val sDuration =
-                mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION) //时长(毫秒)
-            val bitmap =
-                mediaMetadataRetriever.getFrameAtTime(
-                    0,
-                    MediaMetadataRetriever.OPTION_NEXT_SYNC
-                ) //缩略图
-            val imgWidth = bitmap?.width
-            val imgHeight = bitmap?.height
-            if (bitmap == null) {
-                LogUtil.e("buildVideoMessage() bitmap is null")
-                return
-            }
-            val duration = java.lang.Long.valueOf(sDuration)
-            val imgPath: String = FileUtil.saveBitmap("JCamera", bitmap)
-            val mImageMsgBody = VideoMsgBody()
-            mImageMsgBody.extra = imgPath
-            mMessgae.body = mImageMsgBody
-            //开始发送
-            mAdapter?.addData(mMessgae)
-            //模拟两秒后发送成功
-            updateMsg(mMessgae)
-        } catch (e: Exception) {
-            LogUtil.d("视频缩略图路径获取失败：$e")
-            e.printStackTrace()
-        } finally {
-            mediaMetadataRetriever.release()
-        }
-
-    }
-
-    //文件消息
-    private fun sendFileMessage(from: String, to: String, path: String) {
-        val mMessgae = getBaseSendMessage(MsgType.FILE)
-        val mFileMsgBody = FileMsgBody()
-        mFileMsgBody.localPath = path
-        mFileMsgBody.displayName = FileUtil.getFileName(this, Uri.parse(path))
-        mFileMsgBody.size = FileUtil.getFileLength(path)
-        mMessgae.body = mFileMsgBody
-        //开始发送
-        mAdapter?.addData(mMessgae)
-        //模拟两秒后发送成功
-        updateMsg(mMessgae)
-    }
-
-    //语音消息
-    private fun sendAudioMessage(path: String, time: Int) {
-        val mMessgae: Message = getBaseSendMessage(
-            MsgType.AUDIO
-        )
-        val mFileMsgBody = AudioMsgBody()
-        mFileMsgBody.localPath = path
-        mFileMsgBody.duration = time.toLong()
-        mMessgae.body = mFileMsgBody
-        //开始发送
-        mAdapter?.addData(mMessgae)
-        //模拟两秒后发送成功
-        updateMsg(mMessgae)
-    }
-
-    private fun getBaseSendMessage(msgType: MsgType): Message {
-        val mMessgae = Message()
-        mMessgae.uuid = UUID.randomUUID().toString() + ""
-        mMessgae.userId = myId
-        mMessgae.sentTime = System.currentTimeMillis()
-        mMessgae.sentStatus = MsgSendStatus.SENDING
-        mMessgae.msgType = msgType
-        return mMessgae
-    }
-
-
-    private fun getBaseReceiveMessage(msgType: MsgType): Message? {
-        val mMessgae = Message()
-        mMessgae.uuid = UUID.randomUUID().toString() + ""
-        mMessgae.userId = otherId
-        mMessgae.sentTime = System.currentTimeMillis()
-        mMessgae.sentStatus = MsgSendStatus.SENDING
-        mMessgae.msgType = msgType
-        return mMessgae
     }
 
     private fun updateMsg(mMessgae: Message) {
@@ -311,38 +202,28 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     }
 
 
-    override fun getMessageResponse(data: ArrayList<MessageEntity>?) {
-
+    override fun fetchDataSuccess(isLoadMore: Boolean, data: MutableList<Message>) {
+        if (isLoadMore) {
+            mAdapter?.addData(0, data)
+            swipe_chat.isRefreshing = false
+        } else {
+            mAdapter?.setNewInstance(data)
+        }
     }
 
+    override fun fetchDataError() {
+        swipe_chat.isRefreshing = false
+    }
+
+    override fun updateMessage(message: Message) {
+        //开始发送
+        mAdapter?.addData(message)
+        //模拟两秒后发送成功
+        updateMsg(message)
+    }
 
     override fun onRefresh() {
-        //下拉刷新模拟获取历史消息
-        val mReceiveMsgList: MutableList<Message?> = ArrayList()
-        //构建文本消息
-        //构建文本消息
-        val mMessgaeText = getBaseReceiveMessage(MsgType.TEXT)
-        val mTextMsgBody = TextMsgBody()
-        mTextMsgBody.message = "收到的消息"
-        mMessgaeText?.body = mTextMsgBody
-        mReceiveMsgList.add(mMessgaeText)
-        //构建图片消息
-        //构建图片消息
-        val mMessgaeImage = getBaseReceiveMessage(MsgType.IMAGE)
-        val mImageMsgBody = ImageMsgBody()
-        mImageMsgBody.thumbUrl =
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F01%2F210924132020A05-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664517206&t=e7cc1c3246afac219b23950f73f66ba4"
-        mMessgaeImage?.body = mImageMsgBody
-        mReceiveMsgList.add(mMessgaeImage)
-        //构建文件消息
-        val mMessgaeFile = getBaseReceiveMessage(MsgType.FILE)
-        val mFileMsgBody = FileMsgBody()
-        mFileMsgBody.displayName = "收到的文件"
-        mFileMsgBody.size = 12
-        mMessgaeFile?.body = mFileMsgBody
-        mReceiveMsgList.add(mMessgaeFile)
-        mAdapter?.addData(0, mReceiveMsgList)
-        swipe_chat.isRefreshing = false
+        mPresenter.fetchData(true)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -350,13 +231,14 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 REQUEST_CODE_FILE -> {
+                    //TODO:
                 }
                 REQUEST_CODE_IMAGE -> {
                     // 图片选择结果回调
                     val selectListPic = PictureSelector.obtainMultipleResult(data)
                     for (media in selectListPic) {
                         LogUtil.d("获取图片路径成功:" + media.path)
-                        sendImageMessage(media)
+                        mPresenter.sendImageMessage(media)
                     }
                 }
                 REQUEST_CODE_VEDIO -> {
@@ -364,12 +246,10 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                     val selectListVideo = PictureSelector.obtainMultipleResult(data)
                     for (media in selectListVideo) {
                         LogUtil.d("获取视频路径成功:" + media.path)
-                        sendVideoMessage(media)
+                        mPresenter.sendVideoMessage(media)
                     }
                 }
             }
         }
     }
-
-
 }

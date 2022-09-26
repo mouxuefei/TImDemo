@@ -27,7 +27,7 @@ abstract class BaseActivity : AppCompatActivity() {
     @LayoutRes
     abstract fun getContentView(): Int
 
-    abstract fun initView()
+
     open fun useEventBus(): Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
 //        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -38,8 +38,14 @@ abstract class BaseActivity : AppCompatActivity() {
         mProgressDialog = MLoadingView(this, R.style.dialog_transparent_style)
         bindView()
         initView()
+        initData()
         onSetContentViewNext(savedInstanceState)
+
     }
+
+    abstract fun initView()
+
+    abstract fun initData()
 
     open fun bindView() {
 

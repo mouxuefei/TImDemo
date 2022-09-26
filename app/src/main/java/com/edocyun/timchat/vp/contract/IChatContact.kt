@@ -2,7 +2,9 @@ package com.edocyun.timchat.vp.contract
 
 import com.edocyun.timchat.base.IPresenter
 import com.edocyun.timchat.base.IView
+import com.edocyun.timchat.vp.api.Message
 import com.edocyun.timchat.vp.api.MessageEntity
+import com.luck.picture.lib.entity.LocalMedia
 
 /**
  * @FileName: IMainContact.java
@@ -13,10 +15,25 @@ import com.edocyun.timchat.vp.api.MessageEntity
  */
 interface IChatContact {
     interface View : IView<Presenter> {
-        fun getMessageResponse(data: ArrayList<MessageEntity>?)
+
+        fun updateMessage(message: Message)
+
+        fun fetchDataSuccess(isLoadMore:Boolean,data: MutableList<Message>)
+
+        fun fetchDataError()
     }
 
     interface Presenter : IPresenter<View> {
         fun fetchData(isLoadMore:Boolean)
+
+        fun sendTextMsg(text: String)
+
+        fun sendImageMessage(media: LocalMedia)
+
+        fun sendVideoMessage(media: LocalMedia)
+
+        fun sendFileMessage( path: String)
+
+        fun sendAudioMessage(path: String, time: Int)
     }
 }

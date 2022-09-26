@@ -19,10 +19,6 @@ abstract class BaseMvpActivity<V : ITopView, P : ITopPresenter> : BaseActivity()
         mProgressDialog?.showProgressDialogWithText(msg)
     }
 
-    override fun finish(resultCode: Int) {
-        finish()
-    }
-
     override fun showLoading(srtResId: Int) {
         mProgressDialog?.showProgressDialogWithText(resources.getString(srtResId))
     }
@@ -38,4 +34,9 @@ abstract class BaseMvpActivity<V : ITopView, P : ITopPresenter> : BaseActivity()
     override fun showToast(srtResId: Int) {
         toast(resources.getString(srtResId))
     }
+
+    override fun finish(resultCode: Int) {
+        finish()
+    }
+
 }
