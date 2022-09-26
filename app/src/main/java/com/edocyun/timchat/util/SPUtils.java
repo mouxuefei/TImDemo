@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 
 public class SPUtils {
 
-    public static final String DEFAULT_DATABASE = "tuikit";
+    public static final String DEFAULT_DATABASE = "edocyun_sp";
     private static final Map<String, SPUtils> SP_UTILS_MAP = new HashMap<>();
 
     private final SharedPreferences mSharedPreferences;
