@@ -76,7 +76,7 @@
 
         <ProgressBar
             android:id="@+id/chat_item_progress"
-            style="@android:style/Widget.ProgressBar.Small.Inverse"
+            style="@style/common_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
