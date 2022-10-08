@@ -7,6 +7,7 @@ import com.edocyun.timchat.network.entity.BaseListEntity
 import com.edocyun.timchat.network.fetch
 import com.edocyun.timchat.base.BasePresenterKt
 import com.edocyun.timchat.constants.Constants
+import com.edocyun.timchat.util.DateTimeUtil
 import com.edocyun.timchat.util.FileUtil
 import com.edocyun.timchat.util.LogUtil
 import com.edocyun.timchat.vp.api.*
@@ -27,6 +28,7 @@ import java.util.*
  */
 
 class ChatPresenter : BasePresenterKt<IChatContact.View>(), IChatContact.Presenter {
+    private var currentCacheTime = 0L
     private val pageSize = 20
     private var pageIndex = 1
     override fun fetchData(isLoadMore: Boolean) {
@@ -45,14 +47,22 @@ class ChatPresenter : BasePresenterKt<IChatContact.View>(), IChatContact.Present
                 val msgList = getMockMessageList()
                 mView?.fetchDataSuccess(isLoadMore, msgList)
             }
-            onError {
+            onError { it ->
                 mView?.fetchDataError()
                 mView?.showToast(it.message ?: "请求失败")
                 //TODO:
-                val msgList = getMockMessageList()
-                mView?.fetchDataSuccess(isLoadMore, msgList)
+                getHistoryList(isLoadMore)
             }
         }
+    }
+
+    private fun getHistoryList(isLoadMore: Boolean) {
+        val msgList = getMockMessageList()
+        val newMsgList = msgList.map { msg ->
+            msg.isShowTime = checkMsgShowDate(msg.sentTime)
+            msg
+        }
+        mView?.fetchDataSuccess(isLoadMore, newMsgList as MutableList<Message>)
     }
 
     override fun sendTextMsg(text: String) {
@@ -129,13 +139,26 @@ class ChatPresenter : BasePresenterKt<IChatContact.View>(), IChatContact.Present
     }
 
     private fun getBaseSendMessage(msgType: MsgType): Message {
-        val mMessgae = Message()
-        mMessgae.uuid = UUID.randomUUID().toString() + ""
-        mMessgae.userId = Constants.myId
-        mMessgae.sentTime = System.currentTimeMillis()
-        mMessgae.sentStatus = MsgSendStatus.SENDING
-        mMessgae.msgType = msgType
-        return mMessgae
+        val message = Message()
+        message.uuid = UUID.randomUUID().toString() + ""
+        message.userId = Constants.myId
+        message.sentTime = System.currentTimeMillis() / 1000
+        message.sentStatus = MsgSendStatus.SENDING
+        message.msgType = msgType
+        message.isShowTime = checkMsgShowDate(message.sentTime)
+        return message
+    }
+
+    private fun checkMsgShowDate(thisTimestamp: Long): Boolean {
+        val overTimeResult = DateTimeUtil.checkOver5Minutes(
+            currentCacheTime,
+            thisTimestamp
+        )
+        var finalResult = overTimeResult
+        if (overTimeResult) {
+            currentCacheTime = thisTimestamp
+        }
+        return finalResult
     }
 }
 

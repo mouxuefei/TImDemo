@@ -2,16 +2,23 @@ package com.edocyun.timchat.vp.api;
 
 
 public class Message {
-
     private String uuid;
     private String msgId;
     private MsgType msgType;
     private MsgBody body;
     private MsgSendStatus sentStatus;
-
     private long sentTime;
-
     private String userId;
+
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
+    }
+
+    private boolean showTime;
 
 
     public String getUuid() {

@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.edocyun.timchat.R;
 import com.edocyun.timchat.constants.Constants;
+import com.edocyun.timchat.util.DateTimeUtil;
 import com.edocyun.timchat.util.GlideUtils;
 import com.edocyun.timchat.vp.api.AudioMsgBody;
 import com.edocyun.timchat.vp.api.FileMsgBody;
@@ -22,6 +23,7 @@ import com.edocyun.timchat.vp.api.VideoMsgBody;
 
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 public class ChatAdapter extends BaseDelegateMultiAdapter<Message, BaseViewHolder> {
@@ -84,14 +86,30 @@ public class ChatAdapter extends BaseDelegateMultiAdapter<Message, BaseViewHolde
 
     @Override
     protected void convert(BaseViewHolder helper, Message item) {
-        //发送的状态
         setStatus(helper, item);
-        //发送的内容
         setContent(helper, item);
+        setTimeVisible(helper, item);
+    }
 
+    /**
+     * 时间是否显示
+     * @param helper
+     * @param item
+     */
+    private void setTimeVisible(BaseViewHolder helper, Message item) {
+        helper.setVisible(R.id.item_tv_time, item.isShowTime());
+        if(item.isShowTime()){
+            helper.setText(R.id.item_tv_time, DateTimeUtil.getTimeFormatText(item.getSentTime()));
+        }
     }
 
 
+    /**
+     * 发送状态，loading,error
+     *
+     * @param helper
+     * @param item
+     */
     private void setStatus(BaseViewHolder helper, Message item) {
         MsgBody msgContent = item.getBody();
         if (msgContent instanceof TextMsgBody
@@ -123,10 +141,11 @@ public class ChatAdapter extends BaseDelegateMultiAdapter<Message, BaseViewHolde
 
             }
         }
-
-
     }
 
+    /**
+     * 内容
+     */
     private void setContent(BaseViewHolder helper, Message item) {
         if (item.getMsgType().equals(MsgType.TEXT)) {
             TextMsgBody msgBody = (TextMsgBody) item.getBody();

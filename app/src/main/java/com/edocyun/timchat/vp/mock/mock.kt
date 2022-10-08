@@ -51,11 +51,11 @@ fun getMockMessageList(): MutableList<Message> {
 }
 
 private fun getBaseReceiveMessage(msgType: MsgType): Message {
-    val mMessgae = Message()
-    mMessgae.uuid = UUID.randomUUID().toString() + ""
-    mMessgae.userId = Constants.otherId
-    mMessgae.sentTime = System.currentTimeMillis()
-    mMessgae.sentStatus = MsgSendStatus.SENDING
-    mMessgae.msgType = msgType
-    return mMessgae
+    val message = Message()
+    message.uuid = UUID.randomUUID().toString() + ""
+    message.userId = Constants.otherId
+    message.sentTime = System.currentTimeMillis()/1000
+    message.sentStatus = MsgSendStatus.SENDING
+    message.msgType = msgType
+    return message
 }

@@ -7,9 +7,7 @@ import com.edocyun.timchat.TUIConfig;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
 public class DateTimeUtil {
@@ -22,50 +20,24 @@ public class DateTimeUtil {
     private final static long year = 12 * month;
 
     /**
-     * return format text for time
-     * you can see https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
-     * today：HH:MM
-     * this week：Sunday, Friday ..
-     * this year：MM/DD
-     * before this year：YYYY/MM/DD
-     * @param date current time
      * @return format text
      */
-    public static String getTimeFormatText(Date date) {
-        if (date == null) {
-            return "";
+    public static String getTimeFormatText(long formTime) {
+        long newDate = formTime * 1000;
+        String pattern = "yyyy年";
+        String monthPattern = "MM月dd日";
+        String dayPattern = "yyyy-MM-dd";
+        String hourPattern = "HH:mm";
+        SimpleDateFormat sfYear = new SimpleDateFormat(pattern);
+        SimpleDateFormat sfMonth = new SimpleDateFormat(monthPattern);
+        SimpleDateFormat sfDay = new SimpleDateFormat(dayPattern);
+        SimpleDateFormat sfHour = new SimpleDateFormat(hourPattern);
+        String timeText = sfYear.format(new Date(newDate));
+        if (timeText.equals(sfYear.format(new Date()))) {
+            timeText = sfMonth.format(new Date(newDate));
         }
-        Locale  locale = Locale.getDefault();
-        String timeText;
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        long dayStartTimeInMillis = calendar.getTimeInMillis();
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        long weekStartTimeInMillis = calendar.getTimeInMillis();
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        long yearStartTimeInMillis = calendar.getTimeInMillis();
-        long outTimeMillis = date.getTime();
-        if (outTimeMillis < yearStartTimeInMillis) {
-            timeText = String.format(locale, "%tD", date);
-        } else if (outTimeMillis < weekStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tm/%1$td", date);
-        } else if (outTimeMillis < dayStartTimeInMillis) {
-            timeText = String.format(locale, "%tA", date);
-        } else {
-            timeText = String.format(locale, "%tR", date);
+        if (sfDay.format(new Date(newDate)).equals(sfDay.format(new Date()))) {
+            timeText = sfHour.format(new Date(newDate));
         }
         return timeText;
     }
@@ -114,6 +86,7 @@ public class DateTimeUtil {
 
     /**
      * 将字符串转为时间戳
+     *
      * @param dateString
      * @param pattern
      * @return
@@ -121,12 +94,24 @@ public class DateTimeUtil {
     public static long getStringToDate(String dateString, String pattern) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date date = new Date();
-        try{
+        try {
             date = dateFormat.parse(dateString);
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return date.getTime();
+    }
+
+    /**
+     * 判断时间是否大于5分钟
+     */
+    public static boolean checkOver5Minutes(
+            long lastShowTimeStamp,
+            long thisTimeStamp
+    ) {
+        long deviation = thisTimeStamp - lastShowTimeStamp;
+        long deviationMinutes = Math.abs(deviation) / (60);
+        return deviationMinutes >= 5;
     }
 }
