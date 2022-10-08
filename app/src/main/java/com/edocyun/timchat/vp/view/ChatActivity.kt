@@ -9,10 +9,11 @@ import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.edocyun.timchat.R
 import com.edocyun.timchat.base.BaseMvpActivity
 import com.edocyun.timchat.constants.Constants.*
-import com.edocyun.timchat.util.ChatUiHelper
 import com.edocyun.timchat.util.*
 import com.edocyun.timchat.vp.adapter.ChatAdapter
 import com.edocyun.timchat.vp.api.*
@@ -28,6 +29,7 @@ import java.util.*
 class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(),
     IChatContact.View, SwipeRefreshLayout.OnRefreshListener {
     private var mAdapter: ChatAdapter? = null
+    private var mRecommendAdapter: BaseQuickAdapter<String, BaseViewHolder>? = null
     private var ivItemAudio: ImageView? = null
     override fun getContentView() = R.layout.activity_chat
     override var mPresenter: IChatContact.Presenter = ChatPresenter()
@@ -89,6 +91,14 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                 }
             }
         }
+
+        rvRecommend.adapter = object :
+            BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_recommend, null) {
+            override fun convert(holder: BaseViewHolder, item: String) {
+                holder.setText(R.id.itemRecommendTitle,item)
+            }
+
+        }.also { mRecommendAdapter = it }
     }
 
     /**
@@ -210,6 +220,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             swipeChat.isRefreshing = false
         } else {
             mAdapter?.setNewInstance(data)
+            mRecommendAdapter?.setNewInstance(mutableListOf("热门话题","张三李四自己","ssssss"))
         }
     }
 
