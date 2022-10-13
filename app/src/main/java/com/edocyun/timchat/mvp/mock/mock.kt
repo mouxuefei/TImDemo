@@ -1,7 +1,7 @@
-package com.edocyun.timchat.vp.mock
+package com.edocyun.timchat.mvp.mock
 
 import com.edocyun.timchat.constants.Constants
-import com.edocyun.timchat.vp.api.*
+import com.edocyun.timchat.mvp.entity.*
 import java.util.*
 
 /**

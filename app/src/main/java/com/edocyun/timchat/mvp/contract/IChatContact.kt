@@ -1,9 +1,8 @@
-package com.edocyun.timchat.vp.contract
+package com.edocyun.timchat.mvp.contract
 
 import com.edocyun.timchat.base.IPresenter
 import com.edocyun.timchat.base.IView
-import com.edocyun.timchat.vp.api.Message
-import com.edocyun.timchat.vp.api.MessageEntity
+import com.edocyun.timchat.mvp.entity.Message
 import com.luck.picture.lib.entity.LocalMedia
 
 /**

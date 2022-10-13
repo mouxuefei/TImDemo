@@ -1,4 +1,4 @@
-package com.edocyun.timchat.vp.presenter
+package com.edocyun.timchat.mvp.presenter
 
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -10,11 +10,11 @@ import com.edocyun.timchat.constants.Constants
 import com.edocyun.timchat.util.DateTimeUtil
 import com.edocyun.timchat.util.FileUtil
 import com.edocyun.timchat.util.LogUtil
-import com.edocyun.timchat.vp.api.*
-import com.edocyun.timchat.vp.contract.IChatContact
-import com.edocyun.timchat.vp.mock.getMockMessageList
+import com.edocyun.timchat.mvp.api.*
+import com.edocyun.timchat.mvp.contract.IChatContact
+import com.edocyun.timchat.mvp.entity.*
+import com.edocyun.timchat.mvp.mock.getMockMessageList
 import com.luck.picture.lib.entity.LocalMedia
-import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
 

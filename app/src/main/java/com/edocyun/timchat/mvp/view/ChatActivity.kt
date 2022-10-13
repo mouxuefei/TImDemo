@@ -1,4 +1,4 @@
-package com.edocyun.timchat.vp.view
+package com.edocyun.timchat.mvp.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,12 +13,19 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.edocyun.timchat.R
 import com.edocyun.timchat.base.BaseMvpActivity
-import com.edocyun.timchat.constants.Constants.*
+import com.edocyun.timchat.constants.Constants.REQUEST_CODE_FILE
+import com.edocyun.timchat.constants.Constants.REQUEST_CODE_IMAGE
+import com.edocyun.timchat.constants.Constants.REQUEST_CODE_VEDIO
+import com.edocyun.timchat.constants.Constants.myId
 import com.edocyun.timchat.util.*
-import com.edocyun.timchat.vp.adapter.ChatAdapter
-import com.edocyun.timchat.vp.api.*
-import com.edocyun.timchat.vp.contract.IChatContact
-import com.edocyun.timchat.vp.presenter.ChatPresenter
+import com.edocyun.timchat.mvp.adapter.ChatAdapter
+import com.edocyun.timchat.mvp.api.*
+import com.edocyun.timchat.mvp.contract.IChatContact
+import com.edocyun.timchat.mvp.entity.AudioMsgBody
+import com.edocyun.timchat.mvp.entity.Message
+import com.edocyun.timchat.mvp.entity.MsgSendStatus
+import com.edocyun.timchat.mvp.entity.MsgType
+import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_add_layout.*

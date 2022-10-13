@@ -1,4 +1,4 @@
-package com.edocyun.timchat.vp.api
+package com.edocyun.timchat.mvp.entity
 
 /**
  * @FileName: ChatDTO.java

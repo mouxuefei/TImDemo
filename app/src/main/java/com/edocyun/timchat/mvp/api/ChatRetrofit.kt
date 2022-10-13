@@ -1,4 +1,4 @@
-package com.edocyun.timchat.vp.api
+package com.edocyun.timchat.mvp.api
 
 import android.os.Build
 import com.edocyun.timchat.TUIConfig
@@ -22,10 +22,10 @@ object ChatRetrofit : RetrofitFactory<ChatApi>() {
         val (appName: String?, appVersion: String?) = getAppInfo()
         //TODO:
         builder.addHeader("Authorization", "XXXXXXXXXXXXXXXXXXXXX")
-        builder.addHeader("Version", appVersion?:"")
+        builder.addHeader("Version", appVersion ?: "")
         builder.addHeader("OS-Version", Build.VERSION.RELEASE)
         builder.addHeader("Device-Type", "Android")
-        builder.addHeader("Device-Name", appName?:"云朵医生")
+        builder.addHeader("Device-Name", appName ?: "云朵医生")
         builder.addHeader("Device-Model", Build.MODEL)
         //TODO:
         builder.addHeader("Device-Code", "xxxxx")
@@ -34,15 +34,17 @@ object ChatRetrofit : RetrofitFactory<ChatApi>() {
     }
 
     private fun getAppInfo(): Pair<String?, String?> {
-        var appName: String?
-        var appVersion: String?
+        var appName: String = ""
+        var appVersion: String = ""
         try {
-            appVersion = TUIConfig.getAppContext().packageManager.getPackageInfo(
-                TUIConfig.getAppContext().packageName,
-                0
-            ).versionName
-            appName = TUIConfig.getAppContext().applicationInfo
-                .loadLabel(TUIConfig.getAppContext().packageManager).toString()
+            TUIConfig.appContext?.let {
+                appVersion = it.packageManager?.getPackageInfo(
+                    it.packageName,
+                    0
+                )?.versionName.toString()
+                appName = it.applicationInfo
+                    .loadLabel(it.packageManager).toString()
+            }
         } catch (e: Exception) {
             appVersion = "unknown"
             appName = "unknown"

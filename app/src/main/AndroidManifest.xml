@@ -24,7 +24,7 @@
         tools:replace="android:allowBackup"
         android:theme="@style/Theme.TimChat">
         <activity
-            android:name=".vp.view.ChatActivity"
+            android:name=".mvp.view.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

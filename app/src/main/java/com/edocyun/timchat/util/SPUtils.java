@@ -22,14 +22,6 @@ public class SPUtils {
         return getInstance(DEFAULT_DATABASE, Context.MODE_PRIVATE);
     }
 
-    public static SPUtils getInstance(final int mode) {
-        return getInstance(DEFAULT_DATABASE, mode);
-    }
-
-    public static SPUtils getInstance(String spName) {
-        return getInstance(spName, Context.MODE_PRIVATE);
-    }
-
     public static SPUtils getInstance(String spName, final int mode) {
         if (isSpace(spName)) {
             spName = DEFAULT_DATABASE;
