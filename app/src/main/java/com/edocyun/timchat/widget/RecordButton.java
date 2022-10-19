@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edocyun.timchat.R;
+import com.edocyun.timchat.util.FileUtil;
 import com.edocyun.timchat.util.LogUtil;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -45,7 +46,7 @@ public class RecordButton extends AppCompatButton {
         init();
     }
 
-    private String mFile = getContext().getFilesDir() + "/" + "voice_" + System.currentTimeMillis() + ".mp3";
+    private String mFile = FileUtil.getVoiceCachePath() + "voice_" + System.currentTimeMillis() + ".mp3";
 
 
     private OnFinishedRecordListener finishedListener;

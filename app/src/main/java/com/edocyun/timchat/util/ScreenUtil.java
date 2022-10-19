@@ -5,7 +5,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.edocyun.timchat.TUIConfig;
+import com.edocyun.timchat.MainApplication;
 
 
 public class ScreenUtil {
@@ -27,7 +27,7 @@ public class ScreenUtil {
     }
 
     public static int getPxByDp(float dp) {
-        float scale = TUIConfig.getAppContext().getResources().getDisplayMetrics().density;
+        float scale = MainApplication.getApp().getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 
@@ -50,7 +50,7 @@ public class ScreenUtil {
     }
 
     public static int dip2px(float dpValue) {
-        final float scale = TUIConfig.getAppContext().getResources().getDisplayMetrics().density;
+        final float scale = MainApplication.getApp().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 }

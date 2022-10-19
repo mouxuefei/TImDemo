@@ -1,7 +1,5 @@
 package com.edocyun.timchat.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,9 +12,8 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.edocyun.timchat.TUIConfig;
+import com.edocyun.timchat.MainApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -65,7 +62,7 @@ public class ImageUtil {
     public static Bitmap getBitmapFormPath(Uri uri) {
         Bitmap bitmap = null;
         try {
-            InputStream input = TUIConfig.getAppContext().getContentResolver().openInputStream(uri);
+            InputStream input = MainApplication.getApp().getContentResolver().openInputStream(uri);
             BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
             onlyBoundsOptions.inJustDecodeBounds = true;
             onlyBoundsOptions.inDither = true;//optional
@@ -98,7 +95,7 @@ public class ImageUtil {
             bitmapOptions.inSampleSize = be;//设置缩放比例
             bitmapOptions.inDither = true;//optional
             bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
-            input = TUIConfig.getAppContext().getContentResolver().openInputStream(uri);
+            input = MainApplication.getApp().getContentResolver().openInputStream(uri);
             bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
 
             input.close();
@@ -269,7 +266,7 @@ public class ImageUtil {
     // 图片文件先在本地做旋转，返回旋转之后的图片文件路径
     public static String getImagePathAfterRotate(final Uri uri) {
         try {
-            InputStream is = TUIConfig.getAppContext().getContentResolver()
+            InputStream is = MainApplication.getApp().getContentResolver()
                     .openInputStream(uri);
             Bitmap originBitmap = BitmapFactory.decodeStream(is, null, null);
             int degree = ImageUtil.getBitmapDegree(uri);
@@ -277,8 +274,8 @@ public class ImageUtil {
                 return FileUtil.getPathFromUri(uri);
             } else {
                 Bitmap newBitmap = ImageUtil.rotateBitmapByDegree(originBitmap, degree);
-                String oldName = FileUtil.getFileName(TUIConfig.getAppContext(), uri);
-                File newImageFile = FileUtil.generateFileName(oldName, FileUtil.getDocumentCacheDir(TUIConfig.getAppContext()));
+                String oldName = FileUtil.getFileName(MainApplication.getApp(), uri);
+                File newImageFile = FileUtil.generateFileName(oldName, FileUtil.getDocumentCacheDir(MainApplication.getApp()));
                 if (newImageFile == null) {
                     return FileUtil.getPathFromUri(uri);
                 }
@@ -398,18 +395,6 @@ public class ImageUtil {
         }
 
         return inSampleSize;
-    }
-
-
-    /**
-     * 根据图片 UUID 和 类型得到图片文件路径
-     * @param uuid 图片 UUID
-     * @param imageType 图片类型 V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB , V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN ,
-     *                  V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE
-     * @return 图片文件路径
-     */
-    public static String generateImagePath(String uuid, int imageType) {
-        return TUIConfig.getImageDownloadDir() + uuid + "_" + imageType;
     }
 
 

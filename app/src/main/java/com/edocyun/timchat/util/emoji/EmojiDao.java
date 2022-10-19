@@ -3,7 +3,7 @@ package com.edocyun.timchat.util.emoji;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.edocyun.timchat.TUIConfig;
+import com.edocyun.timchat.MainApplication;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +76,7 @@ public class EmojiDao {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                inputStream = TUIConfig.getAppContext().getClass().getClassLoader().getResourceAsStream("assets/" + SqliteFileName);
+                inputStream = MainApplication.getApp().getClass().getClassLoader().getResourceAsStream("assets/" + SqliteFileName);
                 outputStream = new FileOutputStream(file);
                 byte[] buffer = new byte[1024];
                 int len ;

@@ -30,7 +30,7 @@ fun getMockMessageList(): MutableList<Message> {
                 val mMessgaeImage = getBaseReceiveMessage(MsgType.IMAGE)
                 val mImageMsgBody = ImageMsgBody()
                 mImageMsgBody.thumbUrl =
-                    "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2.niutuku.com%2Fdesk%2F1208%2F1300%2Fntk-1300-31979.jpg&refer=http%3A%2F%2Fimg2.niutuku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1667787271&t=61975a2ab855d0d1a6e3b02b51ad79c2"
+                    "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Flmg.jj20.com%2Fup%2Fallimg%2F1114%2F033021091503%2F210330091503-6-1200.jpg&refer=http%3A%2F%2Flmg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1668740123&t=b19af77815638b230ab07e8c2b77bc3a"
                 mMessgaeImage?.body = mImageMsgBody
                 mReceiveMsgList.add(mMessgaeImage)
             }

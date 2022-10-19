@@ -9,20 +9,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.edocyun.timchat.TUIConfig;
+import com.edocyun.timchat.MainApplication;
 
 
 public class SoftKeyBoardUtil {
 
     public static void hideKeyBoard(IBinder token) {
-        InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) MainApplication.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(token, 0);
         }
     }
 
     public static void showKeyBoard(Window window) {
-        InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) MainApplication.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             if (!isSoftInputShown(window)) {
                 imm.toggleSoftInput(0, 0);
@@ -31,7 +31,7 @@ public class SoftKeyBoardUtil {
     }
 
     public static void hideKeyBoard(Window window) {
-        InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) MainApplication.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             if (isSoftInputShown(window)) {
                 imm.toggleSoftInput(0, 0);

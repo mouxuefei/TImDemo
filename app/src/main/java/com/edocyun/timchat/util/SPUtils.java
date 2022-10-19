@@ -3,8 +3,7 @@ package com.edocyun.timchat.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
-import com.edocyun.timchat.TUIConfig;
+import com.edocyun.timchat.MainApplication;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class SPUtils {
     }
 
     private Context getApplicationContext() {
-        return TUIConfig.getAppContext();
+        return MainApplication.getApp();
     }
 
 

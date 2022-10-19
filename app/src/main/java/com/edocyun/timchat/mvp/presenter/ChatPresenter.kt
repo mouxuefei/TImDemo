@@ -103,7 +103,7 @@ class ChatPresenter : BasePresenterKt<IChatContact.View>(), IChatContact.Present
                 return
             }
             val duration = java.lang.Long.valueOf(sDuration)
-            val imgPath: String = FileUtil.saveBitmap("JCamera", bitmap)
+            val imgPath: String = FileUtil.saveBitmap( bitmap)
             val mImageMsgBody = VideoMsgBody()
             mImageMsgBody.extra = imgPath
             message.body = mImageMsgBody

@@ -16,8 +16,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.edocyun.timchat.MainApplication;
 import com.edocyun.timchat.R;
-import com.edocyun.timchat.TUIConfig;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,8 +43,31 @@ public class FileUtil {
     public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
     public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
-    public static String saveBitmap(String dir, Bitmap b) {
-        String jpegName = TUIConfig.getMediaDir() + "picture_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + ".jpg";
+    private static final String IMAGE_DIR_SUFFIX = "/image/";
+    private static final String VOICE_DIR_SUFFIX = "/voice/";
+
+    public static String defaultAppDir() {
+        return MainApplication.getApp().getFilesDir().getAbsolutePath();
+    }
+
+    public static String getImageCachePath() {
+        File file = new File(defaultAppDir() + IMAGE_DIR_SUFFIX);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static String getVoiceCachePath() {
+        File file = new File(defaultAppDir() + VOICE_DIR_SUFFIX);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static String saveBitmap(Bitmap b) {
+        String jpegName = getImageCachePath() + "picture_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + ".jpg";
         try {
             FileOutputStream fout = new FileOutputStream(jpegName);
             BufferedOutputStream bos = new BufferedOutputStream(fout);
@@ -72,7 +95,7 @@ public class FileUtil {
         try {
             int sdkVersion = Build.VERSION.SDK_INT;
             if (sdkVersion >= 19) {
-                path = getPathByCopyFile(TUIConfig.getAppContext(), uri);
+                path = getPathByCopyFile(MainApplication.getApp(), uri);
             } else {
                 path = getRealFilePath(uri);
             }
@@ -96,7 +119,7 @@ public class FileUtil {
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             data = uri.getPath();
         } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = TUIConfig.getAppContext().getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            Cursor cursor = MainApplication.getApp().getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -113,7 +136,7 @@ public class FileUtil {
     public static Uri getUriFromPath(String path) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return TUIFileProvider.getUriForFile(TUIConfig.getAppContext(), TUIConfig.getAppContext().getApplicationInfo().packageName + ".tuicore.fileprovider", new File(path));
+                return TUIFileProvider.getUriForFile(MainApplication.getApp(), MainApplication.getApp().getApplicationInfo().packageName + ".tuicore.fileprovider", new File(path));
             } else {
                 return Uri.fromFile(new File(path));
             }
@@ -456,8 +479,8 @@ public class FileUtil {
     }
 
     public static void openFile(String path, String fileName) {
-        Uri uri = TUIFileProvider.getUriForFile(TUIConfig.getAppContext(),
-                TUIConfig.getAppContext().getApplicationInfo().packageName + ".tuicore.fileprovider",
+        Uri uri = TUIFileProvider.getUriForFile(MainApplication.getApp(),
+                MainApplication.getApp().getApplicationInfo().packageName + ".tuicore.fileprovider",
                 new File(path));
         if (uri == null) {
             Log.e("FileUtil", "openFile failed , uri is null");
@@ -474,9 +497,9 @@ public class FileUtil {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(uri, mimeType);
         try {
-            Intent chooserIntent = Intent.createChooser(intent, TUIConfig.getAppContext().getString(R.string.open_file_tips));
+            Intent chooserIntent = Intent.createChooser(intent, MainApplication.getApp().getString(R.string.open_file_tips));
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            TUIConfig.getAppContext().startActivity(chooserIntent);
+            MainApplication.getApp().startActivity(chooserIntent);
         } catch (Exception e) {
             Log.e("FileUtil", "openFile failed , " + e.getMessage());
         }
@@ -504,7 +527,8 @@ public class FileUtil {
     public static boolean isFile(final File file) {
         return file != null && file.exists() && file.isFile();
     }
-        public static long getFileLength(final File file) {
+
+    public static long getFileLength(final File file) {
         if (!isFile(file)) return -1;
         return file.length();
     }

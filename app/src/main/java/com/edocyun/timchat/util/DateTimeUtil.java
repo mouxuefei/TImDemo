@@ -2,8 +2,8 @@ package com.edocyun.timchat.util;
 
 import android.content.Context;
 
+import com.edocyun.timchat.MainApplication;
 import com.edocyun.timchat.R;
-import com.edocyun.timchat.TUIConfig;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +43,7 @@ public class DateTimeUtil {
     }
 
     public static String formatSeconds(long seconds) {
-        Context context = TUIConfig.getAppContext();
+        Context context = MainApplication.getApp();
         String timeStr = seconds + context.getString(R.string.date_second_short);
         if (seconds > 60) {
             long second = seconds % 60;

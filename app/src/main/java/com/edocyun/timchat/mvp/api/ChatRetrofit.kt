@@ -1,7 +1,7 @@
 package com.edocyun.timchat.mvp.api
 
 import android.os.Build
-import com.edocyun.timchat.TUIConfig
+import com.edocyun.timchat.MainApplication
 import com.edocyun.timchat.network.constant.ApiConfig
 import com.edocyun.timchat.network.retrofit.RetrofitFactory
 import okhttp3.Request
@@ -37,7 +37,7 @@ object ChatRetrofit : RetrofitFactory<ChatApi>() {
         var appName: String = ""
         var appVersion: String = ""
         try {
-            TUIConfig.appContext?.let {
+            MainApplication.getApp()?.let {
                 appVersion = it.packageManager?.getPackageInfo(
                     it.packageName,
                     0
