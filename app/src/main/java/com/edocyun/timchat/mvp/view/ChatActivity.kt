@@ -28,6 +28,7 @@ import com.edocyun.timchat.mvp.entity.MsgType
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.common_titlebar.*
 import kotlinx.android.synthetic.main.include_add_layout.*
 import java.io.File
 import java.util.*
@@ -45,6 +46,14 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         initRv()
         initListener()
         initChatUi()
+        initTopBar()
+    }
+
+    private fun initTopBar() {
+        common_toolbar_back.setOnClickListener {
+            finish()
+        }
+        common_toolbar_title.text = "xxx医生"
     }
 
     override fun initData() {
@@ -77,13 +86,13 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         mAdapter?.addChildClickViewIds(R.id.chat_item_header, R.id.chat_item_layout_content)
         mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as Message
-            when(view.id){
+            when (view.id) {
                 //头像
-                R.id.chat_item_header->{
+                R.id.chat_item_header -> {
 
                 }
                 //内容
-                R.id.chat_item_layout_content->{
+                R.id.chat_item_layout_content -> {
                     when (item.msgType) {
                         MsgType.AUDIO -> {
                             onPressAudio(item, view, position)
@@ -91,7 +100,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                         MsgType.IMAGE -> {
                             onPressImage(item)
                         }
-                        else ->{
+                        else -> {
 
                         }
                     }
@@ -102,7 +111,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         rvRecommend.adapter = object :
             BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_recommend, null) {
             override fun convert(holder: BaseViewHolder, item: String) {
-                holder.setText(R.id.itemRecommendTitle,item)
+                holder.setText(R.id.itemRecommendTitle, item)
             }
 
         }.also { mRecommendAdapter = it }
@@ -227,7 +236,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             swipeChat.isRefreshing = false
         } else {
             mAdapter?.setNewInstance(data)
-            mRecommendAdapter?.setNewInstance(mutableListOf("热门话题","张三李四自己","ssssss"))
+            mRecommendAdapter?.setNewInstance(mutableListOf("热门话题", "张三李四自己", "ssssss"))
         }
     }
 
