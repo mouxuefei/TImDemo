@@ -3,9 +3,7 @@ package com.edocyun.timchat.mvp.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
-import android.os.Bundle
 import android.os.Handler
-import android.os.Parcelable
 import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.ImageView
@@ -30,9 +28,6 @@ import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.tools.JumpUtils
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.common_titlebar.*
 import kotlinx.android.synthetic.main.include_add_layout.*

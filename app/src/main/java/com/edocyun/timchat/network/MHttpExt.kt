@@ -66,6 +66,12 @@ fun <T> Observable<T>.onResult(
         if (baseEntity.success == true) {
             success?.invoke(it)
         } else {
+            val loginInOtherDevice = 20025
+            val tokenExpired = 401
+            if (arrayListOf<Int>(loginInOtherDevice, tokenExpired).contains(baseEntity.code)) {
+                //TODO:登录过期处理
+//                GlobalEventEmitter.emit(EventNames.LoginStateExpired)
+            }
             subErr?.invoke(baseEntity)
         }
     }, {

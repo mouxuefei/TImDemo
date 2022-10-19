@@ -27,14 +27,13 @@ abstract class RetrofitFactory<T> {
             .addInterceptor { chain ->
                 var builder = chain.request().newBuilder()
                 builder.addHeader("Cache-Control", "max-age=0")
-
                 builder.addHeader("Upgrade-Insecure-Requests", "1")
                 builder = getHeader(builder)
                 val build = builder.build()
                 chain.proceed(build)
             }
             .addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-                Logger.i("villa","${message}")
+                Logger.i("${message}")
             }).setLevel(HttpLoggingInterceptor.Level.BODY))//设置打印得日志内容
             .connectTimeout(time_out, TimeUnit.SECONDS)
             .readTimeout(time_out, TimeUnit.SECONDS)
