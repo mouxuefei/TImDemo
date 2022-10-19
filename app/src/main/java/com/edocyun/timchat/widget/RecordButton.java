@@ -106,7 +106,6 @@ public class RecordButton extends AppCompatButton {
     public boolean onTouchEvent(MotionEvent event) {
         XXPermissions.with(getContext())
                 .permission(Permission.RECORD_AUDIO)
-                .permission(Permission.READ_EXTERNAL_STORAGE)
                 .request((permissions, all) -> {
                     if (!all) {
                         return;
