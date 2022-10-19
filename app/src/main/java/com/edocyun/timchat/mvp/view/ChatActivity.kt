@@ -175,7 +175,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                 rvChatList.post(Runnable {
                     mAdapter?.let {
                         if (it.itemCount > 0) {
-                            rvChatList.smoothScrollToPosition(it.itemCount - 1)
+                            rvChatList.scrollToPosition(it.itemCount - 1)
                         }
                     }
 
