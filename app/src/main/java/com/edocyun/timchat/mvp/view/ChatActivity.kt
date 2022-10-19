@@ -11,6 +11,8 @@ import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.afollestad.materialdialogs.DialogAction
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -79,7 +81,19 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
         }
         rlLocation.setOnClickListener {
-            //TODO:位置
+            MaterialDialog.Builder(this)
+                .title("提示")
+                .content(
+                   ""
+                )
+                .positiveText("确定")
+                .negativeText("取消")
+                .canceledOnTouchOutside(false)
+                .cancelable(false)
+                .onPositive { dialog: MaterialDialog?, which: DialogAction? ->
+
+                }
+                .show()
         }
     }
 
