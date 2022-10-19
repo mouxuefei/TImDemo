@@ -10,7 +10,7 @@ class ImageMsgBody : FileMsgBody {
     //是否压缩(false:原图，true：压缩过)
     var isCompress = false
 
-    //高度
+    //高度thumbUrl
     var height = 0
 
     //宽度

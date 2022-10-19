@@ -12,4 +12,6 @@
     <color name="bg">#F5F6FA</color>
 
     <color name="read_dot_bg">#f74c31</color>
+
+    <color name="transparentColor">#0000</color>
 </resources>

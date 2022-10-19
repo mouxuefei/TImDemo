@@ -3,12 +3,15 @@ package com.edocyun.timchat.mvp.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
+import android.os.Bundle
 import android.os.Handler
+import android.os.Parcelable
 import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.edocyun.timchat.R
@@ -17,16 +20,17 @@ import com.edocyun.timchat.constants.Constants.REQUEST_CODE_FILE
 import com.edocyun.timchat.constants.Constants.REQUEST_CODE_IMAGE
 import com.edocyun.timchat.constants.Constants.REQUEST_CODE_VEDIO
 import com.edocyun.timchat.constants.Constants.myId
-import com.edocyun.timchat.util.*
 import com.edocyun.timchat.mvp.adapter.ChatAdapter
 import com.edocyun.timchat.mvp.api.*
 import com.edocyun.timchat.mvp.contract.IChatContact
-import com.edocyun.timchat.mvp.entity.AudioMsgBody
-import com.edocyun.timchat.mvp.entity.Message
-import com.edocyun.timchat.mvp.entity.MsgSendStatus
-import com.edocyun.timchat.mvp.entity.MsgType
+import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
+import com.edocyun.timchat.util.*
+import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.tools.JumpUtils
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.common_titlebar.*
 import kotlinx.android.synthetic.main.include_add_layout.*
@@ -98,7 +102,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
                             onPressAudio(item, view, position)
                         }
                         MsgType.IMAGE -> {
-                            onPressImage(item)
+                            onPressImage(view, item)
                         }
                         else -> {
 
@@ -159,8 +163,20 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     /**
      * 点击图片
      */
-    private fun onPressImage(msg: Message) {
-        //TODO: 查看大图
+    private fun onPressImage(view: View, msg: Message) {
+        if (msg.body is ImageMsgBody) {
+            (msg.body as ImageMsgBody).thumbUrl?.let {
+                PhotoViewer
+                    .setClickSingleImg(it, view)   //因为本框架不参与加载图片，所以还是要写回调方法
+                    .setShowImageViewInterface(object : PhotoViewer.ShowImageViewInterface {
+                        override fun show(iv: ImageView, url: String) {
+                            Glide.with(iv.context).load(url).into(iv)
+                        }
+                    })
+                    .start(this)
+            }
+        }
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
