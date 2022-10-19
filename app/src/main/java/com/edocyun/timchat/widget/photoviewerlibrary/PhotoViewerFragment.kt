@@ -20,6 +20,7 @@ class PhotoViewerFragment : BaseLazyFragment() {
     private var mExitLocation = IntArray(2)
     private var mInAnim = true
     private var mPicData = ""
+
     /**
      * 每次选中图片后设置图片信息
      */
@@ -30,7 +31,11 @@ class PhotoViewerFragment : BaseLazyFragment() {
         mPicData = picData
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         return inflater.inflate(R.layout.item_picture, container, false)
     }
@@ -40,10 +45,7 @@ class PhotoViewerFragment : BaseLazyFragment() {
     }
 
 
-
     override fun onLazyLoad() {
-
-
         if (PhotoViewer.mInterface != null) {
             PhotoViewer.mInterface?.show(mIv, mPicData)
         } else {
@@ -77,10 +79,20 @@ class PhotoViewerFragment : BaseLazyFragment() {
         // 添加点击进入时的动画
         if (mInAnim)
             mIv.post {
-
-                val scaleOa = ObjectAnimator.ofFloat(mIv, "scale", mImgSize[0].toFloat() / mIv.width, 1f)
-                val xOa = ObjectAnimator.ofFloat(mIv, "translationX", mExitLocation[0].toFloat() - mIv.width / 2, 0f)
-                val yOa = ObjectAnimator.ofFloat(mIv, "translationY", mExitLocation[1].toFloat() - mIv.height / 2, 0f)
+                val scaleOa =
+                    ObjectAnimator.ofFloat(mIv, "scale", mImgSize[0].toFloat() / mIv.width, 1f)
+                val xOa = ObjectAnimator.ofFloat(
+                    mIv,
+                    "translationX",
+                    mExitLocation[0].toFloat() - mIv.width / 2,
+                    0f
+                )
+                val yOa = ObjectAnimator.ofFloat(
+                    mIv,
+                    "translationY",
+                    mExitLocation[1].toFloat() - mIv.height / 2,
+                    0f
+                )
 
                 val set = AnimatorSet()
                 set.duration = 250

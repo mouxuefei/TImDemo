@@ -127,7 +127,9 @@ object PhotoViewer {
                 val absListView = container.get() as AbsListView
                 absListView.getChildAt(currentPage - absListView.firstVisiblePosition)
             } else {
-                (container.get() as androidx.recyclerview.widget.RecyclerView).layoutManager?.findViewByPosition(currentPage)
+                (container.get() as androidx.recyclerview.widget.RecyclerView).layoutManager?.findViewByPosition(
+                    currentPage
+                )
             }
 
             return if (itemView is ViewGroup) {
@@ -212,10 +214,13 @@ object PhotoViewer {
         decorView.layoutTransition = layoutTransition
         val frameLayout = FrameLayout(activity)
 
-        val photoViewLayout = LayoutInflater.from(activity).inflate(R.layout.activity_photoviewer, null)
-        val viewPager = photoViewLayout.findViewById<androidx.viewpager.widget.ViewPager>(R.id.mLookPicVP)
+        val photoViewLayout =
+            LayoutInflater.from(activity).inflate(R.layout.activity_photoviewer, null)
+        val viewPager =
+            photoViewLayout.findViewById<androidx.viewpager.widget.ViewPager>(R.id.mLookPicVP)
 
         val fragments = mutableListOf<PhotoViewerFragment>()
+
         /**
          * 存放小圆点的Group
          */
@@ -226,6 +231,7 @@ object PhotoViewer {
          * 或者存放数字
          */
         var mFrameLayout: FrameLayout? = null
+
         /**
          * 选中的小圆点
          */
@@ -257,7 +263,12 @@ object PhotoViewer {
                 }
 
             }
-            f.setData(intArrayOf(getItemView().measuredWidth, getItemView().measuredHeight), getCurrentViewLocation(), imgData[i], true)
+            f.setData(
+                intArrayOf(getItemView().measuredWidth, getItemView().measuredHeight),
+                getCurrentViewLocation(),
+                imgData[i],
+                true
+            )
             f.longClickListener = longClickListener
             fragments.add(f)
         }
@@ -268,12 +279,17 @@ object PhotoViewer {
         viewPager.adapter = adapter
         viewPager.currentItem = currentPage
         viewPager.offscreenPageLimit = 100
-        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        viewPager.addOnPageChangeListener(object :
+            androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
 
                 if (mSelectedDot != null && imgData.size > 1) {
                     val dx = mDotGroup!!.getChildAt(1).x - mDotGroup!!.getChildAt(0).x
@@ -290,7 +306,8 @@ object PhotoViewer {
                  * 如果滑到的view不在当前页面显示，那么则滑动到那个position，再获取itemView
                  */
                 if (container.get() !is AbsListView) {
-                    val layoutManager = (container.get() as androidx.recyclerview.widget.RecyclerView).layoutManager
+                    val layoutManager =
+                        (container.get() as androidx.recyclerview.widget.RecyclerView).layoutManager
                     if (layoutManager is androidx.recyclerview.widget.LinearLayoutManager) {
                         if (currentPage < layoutManager.findFirstVisibleItemPosition() || currentPage > layoutManager.findLastVisibleItemPosition()) {
                             layoutManager.scrollToPosition(currentPage)
@@ -311,7 +328,12 @@ object PhotoViewer {
 
                 // 这里延时0.2s是为了解决上面👆的问题。因为如果刚调用ScrollToPosition方法，就获取itemView是获取不到的，所以要延时一下
                 Timer().schedule(timerTask {
-                    fragments[currentPage].setData(intArrayOf(getItemView().measuredWidth, getItemView().measuredHeight), getCurrentViewLocation(), imgData[currentPage], false)
+                    fragments[currentPage].setData(
+                        intArrayOf(
+                            getItemView().measuredWidth,
+                            getItemView().measuredHeight
+                        ), getCurrentViewLocation(), imgData[currentPage], false
+                    )
                 }, 200)
 
             }
@@ -339,8 +361,10 @@ object PhotoViewer {
 
                 if (mDotGroup!!.childCount != 0)
                     mDotGroup!!.removeAllViews()
-                val dotParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT)
+                val dotParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
                 /**
                  * 未选中小圆点的间距
                  */
@@ -367,8 +391,10 @@ object PhotoViewer {
                 /**
                  * 两个Group的大小都为match_parent
                  */
-                val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT)
+                val params = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
 
 
                 params.bottomMargin = Utils.dp2px(activity, 70)
@@ -384,12 +410,16 @@ object PhotoViewer {
                     if (mSelectedDot == null) {
                         val iv = ImageView(activity)
                         iv.setImageDrawable(activity.resources.getDrawable(mDot[1]))
-                        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        val params = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
                         /**
                          * 设置选中小圆点的左边距
                          */
                         params.leftMargin = mDotGroup!!.getChildAt(0).x.toInt()
-                        iv.translationX = (dotParams.rightMargin * currentPage + mDotGroup!!.getChildAt(0).width * currentPage).toFloat()
+                        iv.translationX =
+                            (dotParams.rightMargin * currentPage + mDotGroup!!.getChildAt(0).width * currentPage).toFloat()
                         params.gravity = Gravity.BOTTOM
                         mFrameLayout!!.addView(iv, params)
                         mSelectedDot = iv
@@ -406,14 +436,20 @@ object PhotoViewer {
                 tv!!.gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
                 tv!!.textSize = 18f
                 mFrameLayout!!.addView(tv)
-                val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT)
+                val params = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 params.bottomMargin = Utils.dp2px(activity, 80)
                 frameLayout.addView(mFrameLayout, params)
 
             }
         }
-        decorView.addView(frameLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        decorView.addView(
+            frameLayout,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
 
         if (mCreatedInterface != null) {
             mCreatedInterface!!.onCreated()
