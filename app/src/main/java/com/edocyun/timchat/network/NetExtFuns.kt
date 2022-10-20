@@ -70,7 +70,7 @@ fun <RESULT> fetch(init: BaseSubscribeWrap<RESULT>.() -> Unit) {
     wrap.iPresenter?.let {
         wrap.api = wrap.api.bindDisposable(it)
     }
-    wrap.api.onResult({
+    wrap.api.onResult(wrap.iView, {
         wrap.success.invoke(it)
     }, {
         wrap.error.invoke(it)

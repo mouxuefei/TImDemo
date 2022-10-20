@@ -9,8 +9,6 @@ import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.afollestad.materialdialogs.DialogAction
-import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -26,6 +24,7 @@ import com.edocyun.timchat.mvp.contract.IChatContact
 import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
+import com.edocyun.timchat.util.countdown.IntervalTimer
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -76,19 +75,46 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
         }
         rlLocation.setOnClickListener {
-            MaterialDialog.Builder(this)
-                .title("提示")
-                .content(
-                   ""
-                )
-                .positiveText("确定")
-                .negativeText("取消")
-                .canceledOnTouchOutside(false)
-                .cancelable(false)
-                .onPositive { dialog: MaterialDialog?, which: DialogAction? ->
+//            MaterialDialog.Builder(this)
+//                .title("提示")
+//                .content(
+//                   ""
+//                )
+//                .positiveText("确定")
+//                .negativeText("取消")
+//                .canceledOnTouchOutside(false)
+//                .cancelable(false)
+//                .onPositive { dialog: MaterialDialog?, which: DialogAction? ->
+//
+//                }
+//                .show()
+//            val mTimer = CountDownTimer(
+//                10 * 1000,
+//                1000
+//            )
+//            mTimer.setTimerListener(object : NormalTimerListener() {
+//                override fun onTick(millisUntilFinished: Long) {
+//                    LogUtil.e("millisUntilFinished" + millisUntilFinished)
+//                    // 倒计时间隔
+//                }
+//            })
+//            mTimer.start()
+            val timer =
+                IntervalTimer(1000, object :
+                    IntervalTimer.OnTimerInter {
+                    override fun interval(time: Long) {
+                        LogUtil.e("interval" + time)
+                    }
 
-                }
-                .show()
+                    override fun cancel() {
+                        LogUtil.e("cancel")
+                    }
+                })
+            timer.start()
+
+            Handler().postDelayed({
+                timer.cancel()
+            }, 10000)
         }
     }
 

@@ -31,23 +31,8 @@ import java.io.File;
 import androidx.appcompat.widget.AppCompatButton;
 
 public class RecordButton extends AppCompatButton {
-    public RecordButton(Context context) {
-        super(context);
-        init();
-    }
-
-    public RecordButton(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
-    }
-
-    public RecordButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
 
     private String mFile = FileUtil.getVoiceCachePath() + "voice_" + System.currentTimeMillis() + ".mp3";
-
 
     private OnFinishedRecordListener finishedListener;
     /**
@@ -71,18 +56,34 @@ public class RecordButton extends AppCompatButton {
 
     private float y;
 
-
-    public void setOnFinishedRecordListener(OnFinishedRecordListener listener) {
-        finishedListener = listener;
-    }
-
-
     private static long startTime;
     private Dialog recordDialog;
+
     private static int[] res = {R.drawable.ic_volume_0, R.drawable.ic_volume_1, R.drawable.ic_volume_2,
             R.drawable.ic_volume_3, R.drawable.ic_volume_4, R.drawable.ic_volume_5, R.drawable.ic_volume_6
             , R.drawable.ic_volume_7, R.drawable.ic_volume_8};
 
+    private static final String BUTTON_NORMAL  = "松开发送 上滑取消";
+    private static final String BUTTON_CANCEL  = "松开手指 取消发送";
+
+    public RecordButton(Context context) {
+        super(context);
+        init();
+    }
+
+    public RecordButton(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
+
+    public RecordButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public void setOnFinishedRecordListener(OnFinishedRecordListener listener) {
+        finishedListener = listener;
+    }
 
     @SuppressLint("HandlerLeak")
     private void init() {
@@ -135,7 +136,6 @@ public class RecordButton extends AppCompatButton {
                 if (y >= 0 && (System.currentTimeMillis() - startTime <= MAX_INTERVAL_TIME)) {
                     LogUtil.d("结束录音:");
                     finishRecord();
-
                 } else if (y < 0) {  //当手指向上滑，会cancel
                     cancelRecord();
                 }
@@ -147,7 +147,7 @@ public class RecordButton extends AppCompatButton {
      * 初始化录音对话框 并 开始录音
      */
     private void initDialogAndStartRecord() {
-        startTime = System.currentTimeMillis();
+        initTimer();
         recordDialog = new Dialog(getContext(), R.style.like_toast_dialog_style);
         // view = new ImageView(getContext());
         view = View.inflate(getContext(), R.layout.dialog_record, null);
@@ -168,6 +168,10 @@ public class RecordButton extends AppCompatButton {
         lp.gravity = Gravity.CENTER;
         startRecording();
         recordDialog.show();
+    }
+
+    private void initTimer() {
+        startTime = System.currentTimeMillis();
     }
 
     /**

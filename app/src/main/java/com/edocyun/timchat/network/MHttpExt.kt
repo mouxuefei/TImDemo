@@ -1,6 +1,8 @@
 package com.edocyun.timchat.network
 
 
+import com.afollestad.materialdialogs.DialogAction
+import com.afollestad.materialdialogs.MaterialDialog
 import com.edocyun.timchat.network.entity.BaseEntity
 import com.edocyun.timchat.base.ITopPresenter
 import com.edocyun.timchat.base.ITopView
@@ -58,6 +60,7 @@ fun <T> Observable<T>.bindDisposable(iTopPresenter: ITopPresenter? = null): Obse
  * 处理结果
  */
 fun <T> Observable<T>.onResult(
+    view: ITopView? = null,
     success: ((T) -> Unit)? = null,
     subErr: ((BaseEntity<*>) -> Unit)? = null
 ): Disposable =
@@ -69,6 +72,18 @@ fun <T> Observable<T>.onResult(
             val loginInOtherDevice = 20025
             val tokenExpired = 401
             if (arrayListOf<Int>(loginInOtherDevice, tokenExpired).contains(baseEntity.code)) {
+                view?.getCtx()?.let { it1 ->
+                    MaterialDialog.Builder(it1)
+                        .title("登录已过期")
+                        .positiveText("重新登录")
+                        .negativeText("取消")
+                        .canceledOnTouchOutside(false)
+                        .cancelable(false)
+                        .onPositive { dialog: MaterialDialog?, which: DialogAction? ->
+
+                        }
+                        .show()
+                }
                 //TODO:登录过期处理
 //                GlobalEventEmitter.emit(EventNames.LoginStateExpired)
             }
