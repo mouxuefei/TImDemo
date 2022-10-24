@@ -64,5 +64,10 @@
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
 
+    <style name="dialog_center_style" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/centershow</item>
+        <item name="android:windowExitAnimation">@anim/centerhide</item>
+    </style>
+
 
 </resources>

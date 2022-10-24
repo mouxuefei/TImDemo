@@ -24,7 +24,8 @@ import com.edocyun.timchat.mvp.contract.IChatContact
 import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
-import com.edocyun.timchat.util.countdown.IntervalTimer
+import com.edocyun.timchat.util.dialog.TipDialogEntity
+import com.edocyun.timchat.util.dialog.tipsDialog
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -94,27 +95,29 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 //            )
 //            mTimer.setTimerListener(object : NormalTimerListener() {
 //                override fun onTick(millisUntilFinished: Long) {
-//                    LogUtil.e("millisUntilFinished" + millisUntilFinished)
+//                    LogUtil.e("millisUntilFinished"  + millisUntilFinished)
 //                    // 倒计时间隔
 //                }
 //            })
 //            mTimer.start()
-            val timer =
-                IntervalTimer(1000, object :
-                    IntervalTimer.OnTimerInter {
-                    override fun interval(time: Long) {
-                        LogUtil.e("interval" + time)
-                    }
-
-                    override fun cancel() {
-                        LogUtil.e("cancel")
-                    }
-                })
-            timer.start()
-
-            Handler().postDelayed({
-                timer.cancel()
-            }, 10000)
+//            val timer =
+//                IntervalTimer(1000, object :
+//                    IntervalTimer.OnTimerInter {
+//                    override fun interval(time: Long) {
+//                        LogUtil.e("interval" + time)
+//                    }
+//
+//                    override fun cancel() {
+//                         LogUtil.e("cancel")
+//                    }
+//                })
+//            timer.start()
+//
+//            Handler().postDelayed({
+//                timer.cancel()
+//            }, 10000)
+            val entity = TipDialogEntity(fragmentManager = supportFragmentManager, title = "")
+            tipsDialog(entity)
         }
     }
 
