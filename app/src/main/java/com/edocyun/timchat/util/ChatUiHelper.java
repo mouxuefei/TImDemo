@@ -28,7 +28,9 @@ import com.edocyun.timchat.R;
 import com.edocyun.timchat.util.emoji.EmojiAdapter;
 import com.edocyun.timchat.util.emoji.EmojiBean;
 import com.edocyun.timchat.util.emoji.EmojiDao;
-import com.edocyun.timchat.util.emoji.EmojiVpAdapter;
+import com.edocyun.timchat.util.emoji.CommonVpAdapter;
+import com.edocyun.timchat.util.morelayout.MoreAdapter;
+import com.edocyun.timchat.util.morelayout.MoreLayoutItemBean;
 import com.edocyun.timchat.widget.IndicatorView;
 import com.edocyun.timchat.widget.RecordButton;
 
@@ -135,7 +137,7 @@ public class ChatUiHelper {
             recyclerView.setAdapter(entranceAdapter);
             viewList.add(recyclerView);
         }
-        EmojiVpAdapter adapter = new EmojiVpAdapter(viewList);
+        CommonVpAdapter adapter = new CommonVpAdapter(viewList);
         vpEmoji.setAdapter(adapter);
         indEmoji.setIndicatorCount(vpEmoji.getAdapter().getCount());
         indEmoji.setCurrentIndicator(vpEmoji.getCurrentItem());
@@ -164,16 +166,7 @@ public class ChatUiHelper {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP && mBottomLayout.isShown()) {
-                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
-                    hideBottomLayout(true);//隐藏表情布局，显示软件盘
-                    mIvEmoji.setImageResource(R.mipmap.ic_emoji);
-                    //软件盘显示后，释放内容高度
-                    mEditText.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            unlockContentHeightDelayed();
-                        }
-                    }, 200L);
+                    clickEt();
                 }
                 return false;
             }
@@ -204,6 +197,19 @@ public class ChatUiHelper {
         return this;
     }
 
+    private void clickEt() {
+        lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
+        hideBottomLayout(true);//隐藏表情布局，显示软件盘
+        mIvEmoji.setImageResource(R.mipmap.ic_emoji);
+        //软件盘显示后，释放内容高度
+        mEditText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                unlockContentHeightDelayed();
+            }
+        }, 200L);
+    }
+
     //绑定底部布局
     public ChatUiHelper bindBottomLayout(RelativeLayout bottomLayout) {
         mBottomLayout = bottomLayout;
@@ -220,11 +226,66 @@ public class ChatUiHelper {
     //绑定添加布局
     public ChatUiHelper bindAddLayout(LinearLayout addLayout) {
         mAddLayout = addLayout;
+        mAddLayout.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideBottomLayout(false);//隐藏表情布局，显示软件盘
+                mIvEmoji.setImageResource(R.mipmap.ic_emoji);
+                unlockContentHeightDelayed();
+            }
+        });
         return this;
     }
 
+    private static final int MORE_PAGE_SIZE = 8;
+
+    public ChatUiHelper bindMoreLayoutData(List<MoreLayoutItemBean> list) {
+        ViewPager vpMore = mActivity.findViewById(R.id.vp_more);
+        final IndicatorView indMore = mActivity.findViewById(R.id.ind_more);
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        int pageCount = (int) Math.ceil((list.size()) * 1.0 / MORE_PAGE_SIZE);//一共的页数
+        LogUtil.d("总共的页数:" + pageCount);
+        List<View> viewList = new ArrayList<View>();
+        for (int index = 0; index < pageCount; index++) {
+            //每个页面创建一个recycleview
+            RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.item_emoji_vprecy, vpMore, false);
+            recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
+            MoreAdapter entranceAdapter;
+            if (index == pageCount - 1) {
+                //最后一页的数据
+                List<MoreLayoutItemBean> lastPageList = list.subList(index * MORE_PAGE_SIZE, list.size());
+                entranceAdapter = new MoreAdapter(lastPageList, index, MORE_PAGE_SIZE);
+            } else {
+                entranceAdapter = new MoreAdapter(list.subList(index * MORE_PAGE_SIZE, (index + 1) * MORE_PAGE_SIZE), index, MORE_PAGE_SIZE);
+            }
+            entranceAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    //TODO:
+                }
+            });
+            recyclerView.setAdapter(entranceAdapter);
+            viewList.add(recyclerView);
+        }
+        if (pageCount == 1) {
+            indMore.setVisibility(View.GONE);
+        }
+        CommonVpAdapter adapter = new CommonVpAdapter(viewList);
+        vpMore.setAdapter(adapter);
+        indMore.setIndicatorCount(vpMore.getAdapter().getCount());
+        indMore.setCurrentIndicator(vpMore.getCurrentItem());
+        vpMore.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                indMore.setCurrentIndicator(position);
+            }
+        });
+        return this;
+    }
+
+
     //绑定发送按钮
-    public ChatUiHelper bindttToSendButton(Button sendbtn) {
+    public ChatUiHelper bindToSendButton(Button sendbtn) {
         mSendBtn = sendbtn;
         return this;
     }
@@ -247,18 +308,21 @@ public class ChatUiHelper {
                     hideAudioButton();
                     mEditText.requestFocus();
                     showSoftInput();
-
                 } else {
-                    mEditText.clearFocus();
-                    showAudioButton();
-                    hideEmotionLayout();
-                    hideMoreLayout();
+                    dealClearFocusAndShowAudio();
                 }
             }
         });
 
         // UIUtils.postTaskDelay(() -> mRvMsg.smoothMoveToPosition(mRvMsg.getAdapter().getItemCount() - 1), 50);
         return this;
+    }
+
+    private void dealClearFocusAndShowAudio() {
+        mEditText.clearFocus();
+        showAudioButton();
+        hideEmotionLayout();
+        hideMoreLayout();
     }
 
     private void hideAudioButton() {
@@ -297,14 +361,10 @@ public class ChatUiHelper {
                 } else if (mEmojiLayout.isShown() && !mAddLayout.isShown()) {
                     mIvEmoji.setImageResource(R.mipmap.ic_emoji);
                     if (mBottomLayout.isShown()) {
-                        lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
-                        hideBottomLayout(true);//隐藏表情布局，显示软件盘
-                        unlockContentHeightDelayed();//软件盘显示后，释放内容高度
+                        dealClosePanel();
                     } else {
                         if (isSoftInputShown()) {//同上
-                            lockContentHeight();
-                            showBottomLayout();
-                            unlockContentHeightDelayed();
+                            dealShowPanel();
                         } else {
                             showBottomLayout();//两者都没显示，直接显示表情布局
                         }
@@ -317,14 +377,10 @@ public class ChatUiHelper {
                 hideMoreLayout();
                 hideAudioButton();
                 if (mBottomLayout.isShown()) {
-                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
-                    hideBottomLayout(true);//隐藏表情布局，显示软件盘
-                    unlockContentHeightDelayed();//软件盘显示后，释放内容高度
+                    dealClosePanel();
                 } else {
                     if (isSoftInputShown()) {//同上
-                        lockContentHeight();
-                        showBottomLayout();
-                        unlockContentHeightDelayed();
+                        dealShowPanel();
                     } else {
                         showBottomLayout();//两者都没显示，直接显示表情布局
                     }
@@ -334,6 +390,12 @@ public class ChatUiHelper {
         return this;
     }
 
+    private void dealShowPanel() {
+        lockContentHeight();
+        showBottomLayout();
+        unlockContentHeightDelayed();
+    }
+
 
     //绑定底部加号按钮
     public ChatUiHelper bindToAddButton(View addButton) {
@@ -341,33 +403,35 @@ public class ChatUiHelper {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 mEditText.clearFocus();
-                 hideAudioButton();
-                 if (mBottomLayout.isShown()){
-                  if (mAddLayout.isShown()){
-                      lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
-                      hideBottomLayout(true);//隐藏表情布局，显示软件盘
-                      unlockContentHeightDelayed();//软件盘显示后，释放内容高度
-                  }else{
-                      showMoreLayout();
-                      hideEmotionLayout();
-                  }
-              }else{
-                  if (isSoftInputShown()) {//同上
-                      hideEmotionLayout();
-                      showMoreLayout();
-                      lockContentHeight();
-                      showBottomLayout();
-                      unlockContentHeightDelayed();
-                  } else {
-                       showMoreLayout();
-                       hideEmotionLayout();
-                       showBottomLayout();//两者都没显示，直接显示表情布局
-                  }
-              }
+                mEditText.clearFocus();
+                hideAudioButton();
+                if (mBottomLayout.isShown()) {
+                    if (mAddLayout.isShown()) {
+                        dealClosePanel();
+                    } else {
+                        showMoreLayout();
+                        hideEmotionLayout();
+                    }
+                } else {
+                    if (isSoftInputShown()) {//同上
+                        hideEmotionLayout();
+                        showMoreLayout();
+                        dealShowPanel();
+                    } else {
+                        showMoreLayout();
+                        hideEmotionLayout();
+                        showBottomLayout();//两者都没显示，直接显示表情布局
+                    }
+                }
             }
         });
         return this;
+    }
+
+    private void dealClosePanel() {
+        lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
+        hideBottomLayout(true);//隐藏表情布局，显示软件盘
+        unlockContentHeightDelayed();//软件盘显示后，释放内容高度
     }
 
 
@@ -396,7 +460,7 @@ public class ChatUiHelper {
 
     private void showBottomLayout() {
         int softInputHeight = getSupportSoftInputHeight();
-         if (softInputHeight == 0) {
+        if (softInputHeight == 0) {
             softInputHeight = mSp.getInt(SHARE_PREFERENCE_TAG, dip2Px(270));
         }
         hideSoftInput();
@@ -524,7 +588,7 @@ public class ChatUiHelper {
                 vp.getChildAt(i).getContext().getPackageName();
                 if (vp.getChildAt(i).getId() != View.NO_ID &&
                         NAVIGATION.equals(activity.getResources().getResourceEntryName(vp.getChildAt(i).getId()))) {
-                     return true;
+                    return true;
                 }
             }
         }

@@ -3,8 +3,9 @@
     <declare-styleable name="IndicatorView">
         <attr name="indicatorColor" format="color" />
         <attr name="indicatorColorSelected" format="color" />
-        <attr name="indicatorWidth" format="integer" />
-        <attr name="gravity" format="integer" />
+        <attr name="indicatorHeight" format="integer" />
+        <attr name="indicatorNormalWidth" format="integer" />
+        <attr name="indicatorSelectedWidth" format="integer" />
     </declare-styleable>
 
 

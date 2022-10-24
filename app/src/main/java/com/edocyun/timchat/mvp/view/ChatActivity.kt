@@ -27,9 +27,11 @@ import com.edocyun.timchat.util.*
 import com.edocyun.timchat.util.dialog.TipDialogEntity
 import com.edocyun.timchat.util.dialog.TipDialogType
 import com.edocyun.timchat.util.dialog.tipsDialog
+import com.edocyun.timchat.util.morelayout.MoreLayoutItemBean
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.chat_input.*
 import kotlinx.android.synthetic.main.common_titlebar.*
 import kotlinx.android.synthetic.main.include_add_layout.*
 import java.io.File
@@ -39,6 +41,7 @@ import java.util.*
 class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(),
     IChatContact.View, SwipeRefreshLayout.OnRefreshListener {
     private var mAdapter: ChatAdapter? = null
+    private var chatUiHelper: ChatUiHelper? = null
     private var mRecommendAdapter: BaseQuickAdapter<String, BaseViewHolder>? = null
     private var ivItemAudio: ImageView? = null
     override fun getContentView() = R.layout.activity_chat
@@ -67,16 +70,16 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             mPresenter.sendTextMsg(etContent.text.toString())
             etContent.setText("")
         }
-        rlPhoto.setOnClickListener {
-            PictureFileUtil.openGalleryPic(this@ChatActivity, REQUEST_CODE_IMAGE)
-        }
-        rlVideo.setOnClickListener {
-            PictureFileUtil.openGalleryVideo(this@ChatActivity, REQUEST_CODE_VEDIO)
-        }
-        rlFile.setOnClickListener {
-            PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
-        }
-        rlLocation.setOnClickListener {
+//        rlPhoto.setOnClickListener {
+//            PictureFileUtil.openGalleryPic(this@ChatActivity, REQUEST_CODE_IMAGE)
+//        }
+//        rlVideo.setOnClickListener {
+//            PictureFileUtil.openGalleryVideo(this@ChatActivity, REQUEST_CODE_VEDIO)
+//        }
+//        rlFile.setOnClickListener {
+//            PictureFileUtil.openFile(this@ChatActivity, REQUEST_CODE_FILE)
+//        }
+//        rlLocation.setOnClickListener {
 //            MaterialDialog.Builder(this)
 //                .title("提示")
 //                .content(
@@ -117,15 +120,15 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 //            Handler().postDelayed({
 //                timer.cancel()
 //            }, 10000)
-            val entity = TipDialogEntity(
-                fragmentManager = supportFragmentManager,
-                title = "",
-                type = TipDialogType.Success,
-                buttonLeftClickListener = {
-
-                })
-            tipsDialog(entity)
-        }
+//            val entity = TipDialogEntity(
+//                fragmentManager = supportFragmentManager,
+//                title = "",
+//                type = TipDialogType.Success,
+//                buttonLeftClickListener = {
+//
+//                })
+//            tipsDialog(entity)
+//        }
     }
 
     private fun initRv() {
@@ -224,20 +227,30 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     private fun initChatUi() {
-        //mBtnAudio
-        val uiHelper = ChatUiHelper.with(this)
-        uiHelper.bindContentLayout(llContent)
-            .bindttToSendButton(btnSend)
-            .bindEditText(etContent)
-            .bindBottomLayout(bottomLayout)
-            .bindEmojiLayout(rlEmotion as LinearLayout?)
-            .bindAddLayout(llAdd as LinearLayout?)
-            .bindToAddButton(ivAdd)
-            .bindToEmojiButton(ivEmo)
-            .bindAudioBtn(btnAudio)
-            .bindAudioIv(ivAudioIcon)
+        val data = mutableListOf(
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            )
+        chatUiHelper = ChatUiHelper.with(this)
+        chatUiHelper?.bindContentLayout(llContent)
+            ?.bindToSendButton(btnSend)
+            ?.bindEditText(etContent)
+            ?.bindBottomLayout(bottomLayout)
+            ?.bindEmojiLayout(rlEmotion as LinearLayout?)
+            ?.bindAddLayout(llAdd as LinearLayout?)
+            ?.bindToAddButton(ivAdd)
+            ?.bindToEmojiButton(ivEmo)
+            ?.bindAudioBtn(btnAudio)
+            ?.bindAudioIv(ivAudioIcon)
+            ?.bindMoreLayoutData(data)
 //            .bindEmojiData()
         //底部布局弹出,聊天列表上滑到最后一位
         rvChatList.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
@@ -255,8 +268,8 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 
         //点击空白区域关闭键盘
         rvChatList.setOnTouchListener(OnTouchListener { _, _ ->
-            uiHelper.hideBottomLayout(false)
-            uiHelper.hideSoftInput()
+            chatUiHelper?.hideBottomLayout(false)
+            chatUiHelper?.hideSoftInput()
             etContent.clearFocus()
             ivEmo.setImageResource(R.mipmap.ic_emoji)
             false
@@ -342,4 +355,5 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             }
         }
     }
+
 }

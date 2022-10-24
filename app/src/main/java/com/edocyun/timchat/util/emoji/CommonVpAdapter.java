@@ -7,10 +7,10 @@ import java.util.List;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-public class EmojiVpAdapter extends PagerAdapter {
+public class CommonVpAdapter extends PagerAdapter {
 
     private List<View> mViewList;
-    public EmojiVpAdapter(List<View> mViewList) {
+    public CommonVpAdapter(List<View> mViewList) {
         this.mViewList = mViewList;
     }
 

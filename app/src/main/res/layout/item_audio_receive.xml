@@ -44,7 +44,8 @@
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="horizontal"
                 android:id="@+id/rlAudio"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
@@ -58,15 +59,13 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:background="@drawable/audio_animation_left_list" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tvDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="0''" />
+                <TextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="0''" />
+            </LinearLayout>
 
         </LinearLayout>
 

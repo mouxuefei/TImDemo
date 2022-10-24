@@ -116,23 +116,28 @@ public class RecordButton extends AppCompatButton {
         return true;
     }
 
+
+
     private void onTouchButton(MotionEvent event) {
         int action = event.getAction();
         y = event.getY();
         if (mStateTV != null && mStateIV != null && y < 0) {
             mStateTV.setText("松开手指,取消发送");
+            setText("松开手指,取消发送");
             mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_volume_cancel));
         } else if (mStateTV != null) {
             mStateTV.setText("手指上滑,取消发送");
         }
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                setText("松开发送");
+                setBackgroundResource(R.drawable.shape_session_btn_voice_press);
+                setText("松开 发送");
                 initDialogAndStartRecord();
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                this.setText("按住录音");
+                setBackgroundResource(R.drawable.shape_session_btn_voice_normal);
+                this.setText("按住 说话");
                 if (y >= 0 && (System.currentTimeMillis() - startTime <= MAX_INTERVAL_TIME)) {
                     LogUtil.d("结束录音:");
                     finishRecord();
@@ -184,7 +189,7 @@ public class RecordButton extends AppCompatButton {
             volumeHandler.sendEmptyMessageDelayed(-100, 500);
             //view.setBackgroundResource(R.drawable.ic_voice_cancel);
             mStateIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_volume_wraning));
-            mStateTV.setText("录音时间太短");
+            mStateTV.setText("时间不足");
             anim.stop();
             File file = new File(mFile);
             file.delete();
