@@ -25,6 +25,7 @@ import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
 import com.edocyun.timchat.util.dialog.TipDialogEntity
+import com.edocyun.timchat.util.dialog.TipDialogType
 import com.edocyun.timchat.util.dialog.tipsDialog
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
@@ -116,7 +117,13 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
 //            Handler().postDelayed({
 //                timer.cancel()
 //            }, 10000)
-            val entity = TipDialogEntity(fragmentManager = supportFragmentManager, title = "")
+            val entity = TipDialogEntity(
+                fragmentManager = supportFragmentManager,
+                title = "",
+                type = TipDialogType.Success,
+                buttonLeftClickListener = {
+
+                })
             tipsDialog(entity)
         }
     }

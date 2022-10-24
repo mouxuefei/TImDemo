@@ -1,9 +1,16 @@
 package com.edocyun.timchat.util.dialog
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
 import com.edocyun.timchat.R
 
@@ -66,13 +73,30 @@ fun tipsDialog(entity: TipDialogEntity) {
                     }
                 }
                 entity.buttonLeftClickListener?.let {
-                    view.getView<LinearLayout>(R.id.button_left).setOnClickListener { v->
+                    view.getView<LinearLayout>(R.id.button_left).setOnClickListener { v ->
                         it.onClick(v)
+                        dismiss()
                     }
                 }
                 entity.buttonRightClickListener?.let {
-                    view.getView<LinearLayout>(R.id.button_right).setOnClickListener {v->
+                    view.getView<LinearLayout>(R.id.button_right).setOnClickListener { v ->
                         it.onClick(v)
+                        dismiss()
+                    }
+                }
+
+                val icon = view.getView<AppCompatImageView>(R.id.dialog_tip_icon)
+                entity.type?.let {
+                    when (it) {
+                        TipDialogType.Error -> {
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_error))
+                        }
+                        TipDialogType.Info -> {
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_info))
+                        }
+                        TipDialogType.Success -> {
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_success))
+                        }
                     }
                 }
 
@@ -80,3 +104,24 @@ fun tipsDialog(entity: TipDialogEntity) {
         }
     }
 }
+
+fun Context.getBitmapFromVectorDrawable(drawableId: Int): Bitmap? {
+    var drawable = ContextCompat.getDrawable(this, drawableId);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        drawable = (drawable?.let { DrawableCompat.wrap(it) })?.mutate();
+    }
+
+    val bitmap = drawable?.intrinsicHeight?.let {
+        Bitmap.createBitmap(
+            drawable.intrinsicWidth, it,
+            Bitmap.Config.ARGB_8888
+        )
+    }
+    val canvas = bitmap?.let { Canvas(it) }
+    canvas?.let {
+        drawable?.setBounds(0, 0, canvas.width, canvas.height);
+        drawable?.draw(canvas);
+    }
+    return bitmap
+}
+

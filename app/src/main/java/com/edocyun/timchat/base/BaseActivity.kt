@@ -8,9 +8,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.edocyun.timchat.R
 import kotlin.properties.Delegates
-
 
 
 /**
