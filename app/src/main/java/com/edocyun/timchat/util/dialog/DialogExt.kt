@@ -33,13 +33,13 @@ class TipDialogEntity(
     val type: TipDialogType? = null,
     val buttonLeftTitle: String? = null,
     val buttonRightTitle: String? = null,
-    val buttonLeftColor: String? = null,
-    val buttonRightColor: String? = null,
+    val buttonLeftColor: Int? = null,
+    val buttonRightColor: Int? = null,
     val buttonLeftClickListener: View.OnClickListener? = null,
     val buttonRightClickListener: View.OnClickListener? = null,
 )
 
-fun tipsDialog(entity: TipDialogEntity) {
+fun showTipDialog(entity: TipDialogEntity) {
     mDialog(entity.fragmentManager) {
         layoutId = R.layout.dialog_tip
         margin = 40
@@ -62,28 +62,29 @@ fun tipsDialog(entity: TipDialogEntity) {
                     val tv = view.getView<TextView>(R.id.button_right_title)
                     tv.text = it
                     entity.buttonRightColor?.let { color ->
-                        tv.setTextColor(Color.parseColor(color))
+                        tv.setTextColor(color)
                     }
                 }
                 entity.buttonLeftTitle?.let {
                     val tv = view.getView<TextView>(R.id.button_Left_title)
                     tv.text = it
                     entity.buttonLeftColor?.let { color ->
-                        tv.setTextColor(Color.parseColor(color))
+                        tv.setTextColor(color)
                     }
                 }
-                entity.buttonLeftClickListener?.let {
-                    view.getView<LinearLayout>(R.id.button_left).setOnClickListener { v ->
+                view.getView<LinearLayout>(R.id.button_left).setOnClickListener { v ->
+                    entity.buttonLeftClickListener?.let {
                         it.onClick(v)
-                        dismiss()
                     }
+                    dialog.dismiss()
                 }
-                entity.buttonRightClickListener?.let {
-                    view.getView<LinearLayout>(R.id.button_right).setOnClickListener { v ->
+                view.getView<LinearLayout>(R.id.button_right).setOnClickListener { v ->
+                    entity.buttonRightClickListener?.let {
                         it.onClick(v)
-                        dismiss()
                     }
+                    dialog.dismiss()
                 }
+
 
                 val icon = view.getView<AppCompatImageView>(R.id.dialog_tip_icon)
                 entity.type?.let {

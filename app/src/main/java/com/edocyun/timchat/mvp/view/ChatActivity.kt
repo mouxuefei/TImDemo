@@ -8,12 +8,14 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.edocyun.timchat.R
 import com.edocyun.timchat.base.BaseMvpActivity
+import com.edocyun.timchat.base.toast
 import com.edocyun.timchat.constants.Constants.REQUEST_CODE_FILE
 import com.edocyun.timchat.constants.Constants.REQUEST_CODE_IMAGE
 import com.edocyun.timchat.constants.Constants.REQUEST_CODE_VEDIO
@@ -24,6 +26,9 @@ import com.edocyun.timchat.mvp.contract.IChatContact
 import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
+import com.edocyun.timchat.util.dialog.TipDialogEntity
+import com.edocyun.timchat.util.dialog.TipDialogType
+import com.edocyun.timchat.util.dialog.showTipDialog
 import com.edocyun.timchat.util.morelayout.MoreLayoutItemBean
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
@@ -47,7 +52,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         initRv()
         initListener()
         initChatUi()
-        initTopBar ()
+        initTopBar()
     }
 
     private fun initTopBar() {
@@ -131,31 +136,16 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         mAdapter = ChatAdapter(this, ArrayList())
         rvChatList.adapter = mAdapter
         swipeChat.setOnRefreshListener(this)
-        mAdapter?.addChildClickViewIds(R.id.chat_item_header, R.id.chat_item_layout_content)
+        //设置点击事件
+        mAdapter?.addChildClickViewIds(
+            R.id.chat_item_header,
+            R.id.chat_item_layout_content,
+            R.id.chat_item_fail
+        )
         mAdapter?.setOnItemChildClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as Message
-            when (view.id) {
-                //头像
-                R.id.chat_item_header -> {
-
-                }
-                //内容
-                R.id.chat_item_layout_content -> {
-                    when (item.msgType) {
-                        MsgType.AUDIO -> {
-                            onPressAudio(item, view, position)
-                        }
-                        MsgType.IMAGE -> {
-                            onPressImage(view, item)
-                        }
-                        else -> {
-
-                        }
-                    }
-                }
-            }
+            dealItemClick(view, item, position)
         }
-
         rvRecommend.adapter = object :
             BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_recommend, null) {
             override fun convert(holder: BaseViewHolder, item: String) {
@@ -163,6 +153,52 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             }
 
         }.also { mRecommendAdapter = it }
+    }
+
+    /**
+     * 处理点击item事件
+     */
+    private fun dealItemClick(
+        view: View,
+        item: Message,
+        position: Int
+    ) {
+        when (view.id) {
+            //头像
+            R.id.chat_item_header -> {
+            }
+            //失败按钮
+            R.id.chat_item_fail -> {
+                val entity = TipDialogEntity(
+                    fragmentManager = supportFragmentManager,
+                    title = "发送失败",
+                    desc = "是否重发该消息？",
+                    type = TipDialogType.Info,
+                    buttonRightTitle = "重试",
+                    buttonRightColor = ContextCompat.getColor(this, R.color.primary),
+                    buttonRightClickListener = {
+                        //TODO:
+                    },
+                    buttonLeftTitle = "取消",
+                    buttonLeftColor = ContextCompat.getColor(this, R.color.c_03081A),
+                )
+                showTipDialog(entity)
+            }
+            //内容
+            R.id.chat_item_layout_content -> {
+                when (item.msgType) {
+                    MsgType.AUDIO -> {
+                        onPressAudio(item, view, position)
+                    }
+                    MsgType.IMAGE -> {
+                        onPressImage(view, item)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -237,7 +273,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),
-            )
+        )
         chatUiHelper = ChatUiHelper.with(this)
         chatUiHelper?.bindContentLayout(llContent)
             ?.bindToSendButton(btnSend)
@@ -283,17 +319,17 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         }
     }
 
-    private fun updateMsg(mMessgae: Message) {
+    private fun updateMsg(message: Message) {
         mAdapter?.let {
             rvChatList.scrollToPosition(it.itemCount - 1)
             //模拟2秒后发送成功
             Handler().postDelayed({
                 var position = 0
-                mMessgae.sentStatus = MsgSendStatus.SENT
+                message.sentStatus = MsgSendStatus.FAILED
                 //更新单个子条目
                 for (i in it.data.indices) {
                     val mAdapterMessage = it.data[i]
-                    if (mMessgae.uuid == mAdapterMessage.uuid) {
+                    if (message.uuid == mAdapterMessage.uuid) {
                         position = i
                     }
                 }

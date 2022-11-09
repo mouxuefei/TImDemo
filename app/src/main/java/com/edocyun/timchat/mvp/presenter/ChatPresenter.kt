@@ -71,7 +71,6 @@ class ChatPresenter : BasePresenterKt<IChatContact.View>(), IChatContact.Present
         mTextMsgBody.message = text
         message.body = mTextMsgBody
         mView?.updateMessage(message)
-
     }
 
     override fun sendImageMessage(media: LocalMedia) {

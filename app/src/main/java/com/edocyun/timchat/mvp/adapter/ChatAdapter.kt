@@ -1,7 +1,6 @@
 package com.edocyun.timchat.mvp.adapter
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
@@ -12,7 +11,6 @@ import com.edocyun.timchat.constants.Constants
 import com.edocyun.timchat.util.DateTimeUtil
 import com.edocyun.timchat.util.GlideUtils
 import com.edocyun.timchat.mvp.entity.*
-import java.io.File
 
 class ChatAdapter(context: Context, data: MutableList<Message>) :
     BaseDelegateMultiAdapter<Message, BaseViewHolder>(data) {
@@ -150,7 +148,8 @@ class ChatAdapter(context: Context, data: MutableList<Message>) :
                 val msgBody = item.body as AudioMsgBody?
                 helper.setText(R.id.tvDuration, msgBody?.duration.toString() + "\"")
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 

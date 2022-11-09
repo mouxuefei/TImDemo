@@ -23,6 +23,7 @@ fun getMockMessageList(): MutableList<Message> {
                 val mTextMsgBody = TextMsgBody()
                 mTextMsgBody.message = "收到的消息"
                 mMessgaeText.body = mTextMsgBody
+                mMessgaeText.sentStatus = MsgSendStatus.FAILED
                 mReceiveMsgList.add(mMessgaeText)
             }
             1 -> {
@@ -32,6 +33,7 @@ fun getMockMessageList(): MutableList<Message> {
                 mImageMsgBody.thumbUrl =
                     "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Flmg.jj20.com%2Fup%2Fallimg%2F1114%2F033021091503%2F210330091503-6-1200.jpg&refer=http%3A%2F%2Flmg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1668740123&t=b19af77815638b230ab07e8c2b77bc3a"
                 mMessgaeImage?.body = mImageMsgBody
+                mMessgaeImage.sentStatus = MsgSendStatus.FAILED
                 mReceiveMsgList.add(mMessgaeImage)
             }
             2 -> {
@@ -41,6 +43,7 @@ fun getMockMessageList(): MutableList<Message> {
                 mFileMsgBody.displayName = "收到的文件"
                 mFileMsgBody.size = 12
                 mMessgaeFile.body = mFileMsgBody
+                mMessgaeFile.sentStatus = MsgSendStatus.FAILED
                 mReceiveMsgList.add(mMessgaeFile)
             }
         }
@@ -54,7 +57,7 @@ private fun getBaseReceiveMessage(msgType: MsgType): Message {
     val message = Message()
     message.uuid = UUID.randomUUID().toString() + ""
     message.userId = Constants.otherId
-    message.sentTime = System.currentTimeMillis()/1000
+    message.sentTime = System.currentTimeMillis() / 1000
     message.sentStatus = MsgSendStatus.SENDING
     message.msgType = msgType
     return message

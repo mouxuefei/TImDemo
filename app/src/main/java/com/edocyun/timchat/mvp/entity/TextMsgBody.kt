@@ -4,6 +4,7 @@ class TextMsgBody : MsgBody {
     var message: String? = null
     var extra: String? = null
     constructor() {}
+
     constructor(message: String?) {
         this.message = message
     }
