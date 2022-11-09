@@ -98,54 +98,20 @@ class ChatAdapter(context: Context, data: MutableList<Message>) :
 
     /**
      * 发送状态，loading,error
-     *
-     * @param helper
-     * @param item
      */
     private fun setStatus(helper: BaseViewHolder, item: Message) {
-        val msgContent = item.body
-        if (msgContent is TextMsgBody
-            || msgContent is AudioMsgBody || msgContent is VideoMsgBody || msgContent is FileMsgBody
-        ) {
-            //只需要设置自己发送的状态
-            val sentStatus = item.sentStatus
-            val isSend = item.userId == Constants.myId
-            if (isSend) {
-                when {
-                    sentStatus === MsgSendStatus.SENDING -> {
-                        helper.setVisible(R.id.chat_item_progress, true)
-                            .setVisible(R.id.chat_item_fail, false)
-                    }
-                    sentStatus === MsgSendStatus.FAILED -> {
-                        helper.setVisible(R.id.chat_item_progress, false)
-                            .setVisible(R.id.chat_item_fail, true)
-                    }
-                    sentStatus === MsgSendStatus.SENT -> {
-                        helper.setVisible(R.id.chat_item_progress, false)
-                            .setVisible(R.id.chat_item_fail, false)
-                    }
-                }
+        val sentStatus = item.sentStatus
+        //TODO: 判断用户id是否是当前用户id
+        val isSend = item.userId == Constants.myId
+        if (isSend) {
+            var progressVisible = false
+            var failVisible = false
+            when {
+                sentStatus === MsgSendStatus.SENDING -> progressVisible = true
+                sentStatus === MsgSendStatus.FAILED -> failVisible = true
             }
-        } else if (msgContent is ImageMsgBody) {
-            val isSend = item.userId == Constants.myId
-            if (isSend) {
-                val sentStatus = item.sentStatus
-                when {
-                    sentStatus === MsgSendStatus.SENDING -> {
-                        helper.setVisible(R.id.chat_item_progress, false)
-                            .setVisible(R.id.chat_item_fail, false)
-                    }
-                    sentStatus === MsgSendStatus.FAILED -> {
-                        helper.setVisible(R.id.chat_item_progress, false)
-                            .setVisible(R.id.chat_item_fail, true)
-                    }
-                    sentStatus === MsgSendStatus.SENT -> {
-                        helper.setVisible(R.id.chat_item_progress, false)
-                            .setVisible(R.id.chat_item_fail, false)
-                    }
-                }
-            } else {
-            }
+            helper.setVisible(R.id.chat_item_progress, progressVisible)
+                .setVisible(R.id.chat_item_fail, failVisible)
         }
     }
 
@@ -153,56 +119,38 @@ class ChatAdapter(context: Context, data: MutableList<Message>) :
      * 内容
      */
     private fun setContent(helper: BaseViewHolder, item: Message) {
-        if (item.msgType == MsgType.TEXT) {
-            val msgBody = item.body as TextMsgBody?
-            helper.setText(R.id.chat_item_content_text, msgBody?.message)
-        } else if (item.msgType == MsgType.IMAGE) {
-            val msgBody = item.body as ImageMsgBody?
-            if (TextUtils.isEmpty(msgBody?.thumbPath)) {
-                GlideUtils.loadChatImage(
-                    context,
-                    msgBody?.thumbUrl,
-                    helper.getView<View>(R.id.bivPic) as ImageView
-                )
-            } else {
-                val file = File(msgBody?.thumbPath)
-                if (file.exists()) {
-                    GlideUtils.loadChatImage(
-                        context,
-                        msgBody?.thumbPath,
-                        helper.getView<View>(R.id.bivPic) as ImageView
-                    )
-                } else {
-                    GlideUtils.loadChatImage(
-                        context,
-                        msgBody?.thumbUrl,
-                        helper.getView<View>(R.id.bivPic) as ImageView
-                    )
-                }
+        when (item.msgType) {
+            MsgType.TEXT -> {
+                val msgBody = item.body as TextMsgBody?
+                helper.setText(R.id.chat_item_content_text, msgBody?.message)
             }
-        } else if (item.msgType == MsgType.VIDEO) {
-            val msgBody = item.body as VideoMsgBody?
-            val file = File(msgBody?.extra)
-            if (file.exists()) {
+            MsgType.IMAGE -> {
+                val msgBody = item.body as ImageMsgBody?
+                val url = if (msgBody?.thumbPath != null) msgBody.thumbPath else msgBody?.thumbUrl
                 GlideUtils.loadChatImage(
                     context,
-                    msgBody?.extra,
+                    url,
                     helper.getView<View>(R.id.bivPic) as ImageView
                 )
-            } else {
+            }
+            MsgType.VIDEO -> {
+                val msgBody = item.body as VideoMsgBody?
                 GlideUtils.loadChatImage(
                     context,
                     msgBody?.extra,
                     helper.getView<View>(R.id.bivPic) as ImageView
                 )
             }
-        } else if (item.msgType == MsgType.FILE) {
-            val msgBody = item.body as FileMsgBody?
-            helper.setText(R.id.msg_tv_file_name, msgBody?.displayName)
-            helper.setText(R.id.msg_tv_file_size, msgBody?.size.toString() + "B")
-        } else if (item.msgType == MsgType.AUDIO) {
-            val msgBody = item.body as AudioMsgBody?
-            helper.setText(R.id.tvDuration, msgBody?.duration.toString() + "\"")
+            MsgType.FILE -> {
+                val msgBody = item.body as FileMsgBody?
+                helper.setText(R.id.msg_tv_file_name, msgBody?.displayName)
+                helper.setText(R.id.msg_tv_file_size, msgBody?.size.toString() + "B")
+            }
+            MsgType.AUDIO -> {
+                val msgBody = item.body as AudioMsgBody?
+                helper.setText(R.id.tvDuration, msgBody?.duration.toString() + "\"")
+            }
+            else -> {}
         }
     }
 
