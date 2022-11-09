@@ -101,11 +101,7 @@ fun showTipDialog(entity: TipDialogEntity) {
 }
 
 fun Context.getBitmapFromVectorDrawable(drawableId: Int): Bitmap? {
-    var drawable = ContextCompat.getDrawable(this, drawableId);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        drawable = (drawable?.let { DrawableCompat.wrap(it) })?.mutate();
-    }
-
+    val drawable = ContextCompat.getDrawable(this, drawableId);
     val bitmap = drawable?.intrinsicHeight?.let {
         Bitmap.createBitmap(
             drawable.intrinsicWidth, it,
@@ -114,8 +110,8 @@ fun Context.getBitmapFromVectorDrawable(drawableId: Int): Bitmap? {
     }
     val canvas = bitmap?.let { Canvas(it) }
     canvas?.let {
-        drawable?.setBounds(0, 0, canvas.width, canvas.height);
-        drawable?.draw(canvas);
+        drawable.setBounds(0, 0, canvas.width, canvas.height);
+        drawable.draw(canvas);
     }
     return bitmap
 }
