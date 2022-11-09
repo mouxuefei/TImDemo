@@ -50,7 +50,7 @@
                 android:id="@+id/bivPic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:background="@drawable/receive_item_bg"
+                android:background="@drawable/shape_receive_item_bg"
                 android:scaleType="centerCrop" />
 
 

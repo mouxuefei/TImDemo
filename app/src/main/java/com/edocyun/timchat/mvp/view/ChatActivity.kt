@@ -24,9 +24,6 @@ import com.edocyun.timchat.mvp.contract.IChatContact
 import com.edocyun.timchat.mvp.entity.*
 import com.edocyun.timchat.mvp.presenter.ChatPresenter
 import com.edocyun.timchat.util.*
-import com.edocyun.timchat.util.dialog.TipDialogEntity
-import com.edocyun.timchat.util.dialog.TipDialogType
-import com.edocyun.timchat.util.dialog.tipsDialog
 import com.edocyun.timchat.util.morelayout.MoreLayoutItemBean
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
@@ -51,7 +48,7 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
         initRv()
         initListener()
         initChatUi()
-        initTopBar()
+        initTopBar ()
     }
 
     private fun initTopBar() {
@@ -186,9 +183,9 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
             ivItemAudio = view.findViewById<ImageView>(R.id.ivAudio)
             MediaManager.reset()
             if (isSend) {
-                ivItemAudio?.setBackgroundResource(R.drawable.audio_animation_right_list)
+                ivItemAudio?.setBackgroundResource(R.drawable.anim_audio_animation_right_list)
             } else {
-                ivItemAudio?.setBackgroundResource(R.drawable.audio_animation_left_list)
+                ivItemAudio?.setBackgroundResource(R.drawable.anim_audio_animation_left_list)
             }
             val drawable = ivItemAudio?.background as AnimationDrawable
             drawable.start()
@@ -231,6 +228,9 @@ class ChatActivity : BaseMvpActivity<IChatContact.View, IChatContact.Presenter>(
     @SuppressLint("ClickableViewAccessibility")
     private fun initChatUi() {
         val data = mutableListOf(
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
+            MoreLayoutItemBean("图片", R.mipmap.ic_photo),
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),
             MoreLayoutItemBean("图片", R.mipmap.ic_photo),

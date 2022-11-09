@@ -7,7 +7,9 @@
     android:background="@color/bg"
     android:orientation="vertical">
 
-    <include layout="@layout/common_titlebar" />
+    <include layout="@layout/layout_common_titlebar" />
+
+    <include layout="@layout/layout_notice" />
 
     <LinearLayout
         android:id="@+id/llContent"
@@ -32,20 +34,13 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRecommend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_recommend" />
-
-        <include layout="@layout/line" />
-
         <include
             android:id="@+id/chatInputContainer"
-            layout="@layout/chat_input" />
+            layout="@layout/layout_chat_input" />
+
+        <include
+            android:id="@+id/includeChooseContainer"
+            layout="@layout/layout_bottom_selected" />
     </LinearLayout>
 
     <RelativeLayout
@@ -56,12 +51,12 @@
         <!--表情-->
         <include
             android:id="@+id/rlEmotion"
-            layout="@layout/include_emoji_layout"
+            layout="@layout/layout_emoji"
             android:visibility="gone" />
 
         <include
             android:id="@+id/llAdd"
-            layout="@layout/include_add_layout"
+            layout="@layout/layout_add_panel"
             android:visibility="gone" />
     </RelativeLayout>
 

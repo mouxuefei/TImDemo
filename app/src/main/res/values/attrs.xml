@@ -10,7 +10,6 @@
 
 
     <declare-styleable name="StateButton">
-
         <!--text color-->
         <attr name="normalTextColor" format="color|reference" />
         <attr name="pressedTextColor" format="color|reference" />
@@ -25,17 +24,13 @@
         <attr name="normalStrokeColor" format="color|reference" />
         <attr name="pressedStrokeColor" format="color|reference" />
         <attr name="unableStrokeColor" format="color|reference" />
-
         <!--background color-->
         <attr name="normalBackgroundColor" format="color|reference" />
         <attr name="pressedBackgroundColor" format="color|reference" />
         <attr name="unableBackgroundColor" format="color|reference" />
-
         <!--background radius-->
         <attr name="rounds" format="boolean|reference" />
         <attr name="radius" format="dimension|reference" />
-
-
         <!--animation duration-->
         <attr name="animationDuration" format="integer|reference" />
 

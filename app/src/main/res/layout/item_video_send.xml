@@ -48,7 +48,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/send_item_bg"
+                android:background="@drawable/shape_send_item_bg"
                 android:scaleType="centerCrop"
                 android:transitionName="sharedView" />
 

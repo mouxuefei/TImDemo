@@ -43,7 +43,7 @@ public class TitleBarLayout extends LinearLayout {
     }
 
     private void init() {
-        inflate(getContext(), R.layout.title_bar_layout, this);
+        inflate(getContext(), R.layout.layout_title_bar, this);
         mTitleLayout = findViewById(R.id.page_title_layout);
         mLeftGroup = findViewById(R.id.page_title_left_group);
         mRightGroup = findViewById(R.id.page_title_right_group);

@@ -49,7 +49,7 @@
                 android:id="@+id/rlAudio"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/receive_item_bg"
+                android:background="@drawable/shape_receive_item_bg"
                 android:minWidth="64dp"
                 android:padding="10dp">
 
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/audio_animation_left_list" />
+                    android:background="@drawable/anim_audio_animation_left_list" />
                 <TextView
                     android:id="@+id/tvDuration"
                     android:layout_width="wrap_content"

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * desc:
  */
 abstract class RetrofitFactory<T> {
-    private val time_out: Long = 15//超时时间
+    private val TIME_OUT: Long = 15//超时时间
     var apiService: T
 
     init {
@@ -35,8 +35,8 @@ abstract class RetrofitFactory<T> {
             .addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
                 Logger.i("${message}")
             }).setLevel(HttpLoggingInterceptor.Level.BODY))//设置打印得日志内容
-            .connectTimeout(time_out, TimeUnit.SECONDS)
-            .readTimeout(time_out, TimeUnit.SECONDS)
+            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
             .build()
 
         apiService = Retrofit.Builder()

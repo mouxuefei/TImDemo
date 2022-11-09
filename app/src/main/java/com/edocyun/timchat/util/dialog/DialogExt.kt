@@ -89,13 +89,13 @@ fun tipsDialog(entity: TipDialogEntity) {
                 entity.type?.let {
                     when (it) {
                         TipDialogType.Error -> {
-                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_error))
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.svg_ic_error))
                         }
                         TipDialogType.Info -> {
-                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_info))
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.svg_ic_info))
                         }
                         TipDialogType.Success -> {
-                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.ic_success))
+                            icon.setImageBitmap(icon.context.getBitmapFromVectorDrawable(R.drawable.svg_ic_success))
                         }
                     }
                 }

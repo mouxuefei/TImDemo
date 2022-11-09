@@ -75,7 +75,7 @@ object PhotoViewer {
      * 下标0的为没有被选中的
      * 下标1的为已经被选中的
      */
-    private val mDot = intArrayOf(R.drawable.no_selected_dot, R.drawable.selected_dot)
+    private val mDot = intArrayOf(R.drawable.shape_no_selected_dot, R.drawable.shape_selected_dot)
 
 
     interface ShowImageViewInterface {
