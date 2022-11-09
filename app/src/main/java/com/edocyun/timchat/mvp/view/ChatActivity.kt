@@ -28,9 +28,8 @@ import com.edocyun.timchat.util.morelayout.MoreLayoutItemBean
 import com.edocyun.timchat.widget.photoviewerlibrary.PhotoViewer
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.chat_input.*
-import kotlinx.android.synthetic.main.common_titlebar.*
-import kotlinx.android.synthetic.main.include_add_layout.*
+import kotlinx.android.synthetic.main.layout_chat_input.*
+import kotlinx.android.synthetic.main.layout_common_titlebar.*
 import java.io.File
 import java.util.*
 
