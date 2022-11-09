@@ -33,7 +33,7 @@ class TipDialogEntity(
     val type: TipDialogType? = null,
     val buttonLeftTitle: String? = null,
     val buttonRightTitle: String? = null,
-    val buttonLeftColor: Int? = null,
+    val buttonLeftColor: Int?  = null,
     val buttonRightColor: Int? = null,
     val buttonLeftClickListener: View.OnClickListener? = null,
     val buttonRightClickListener: View.OnClickListener? = null,
@@ -73,19 +73,13 @@ fun showTipDialog(entity: TipDialogEntity) {
                     }
                 }
                 view.getView<LinearLayout>(R.id.button_left).setOnClickListener { v ->
-                    entity.buttonLeftClickListener?.let {
-                        it.onClick(v)
-                    }
+                    entity.buttonLeftClickListener?.onClick(v)
                     dialog.dismiss()
                 }
                 view.getView<LinearLayout>(R.id.button_right).setOnClickListener { v ->
-                    entity.buttonRightClickListener?.let {
-                        it.onClick(v)
-                    }
+                    entity.buttonRightClickListener?.onClick(v)
                     dialog.dismiss()
                 }
-
-
                 val icon = view.getView<AppCompatImageView>(R.id.dialog_tip_icon)
                 entity.type?.let {
                     when (it) {
